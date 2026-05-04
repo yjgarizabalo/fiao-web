@@ -1,23 +1,44 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import "@/styles/global.css";
+import Header from "@/components/layout/Header";
+import ScrollToTop from "@/components/layout/ScrollToTop";
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "fiao", description = "Organiza si microcredito" } =
+  Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>{title}</title>
+
+    <style>
+      body {
+        font-family: "DM Sans", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-foreground">
+    <Header client:load />
+    <slot />
+    <ScrollToTop client:load />
+  </body>
+</html>
