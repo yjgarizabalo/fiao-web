@@ -1,44 +1,93 @@
 ---
+import "@fontsource-variable/dm-sans";
 import "@/styles/global.css";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer.astro";
 import ScrollToTop from "@/components/layout/ScrollToTop";
+import { site } from "@/lib/seo";
 
 export interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
+  /** Para páginas que no deben indexarse, como 404. */
+  noindex?: boolean;
 }
 
-const { title = "fiao", description = "Organiza si microcredito" } =
-  Astro.props;
+const {
+  title = site.name,
+  description = site.description,
+  ogImage = site.ogImage,
+  noindex = false,
+} = Astro.props;
+
+const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
+const canonicalUrl = new URL(Astro.url.pathname, site.url).toString();
+const absoluteOgImage = new URL(ogImage, site.url).toString();
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  url: site.url,
+  logo: new URL("/images/logo/logo.png", site.url).toString(),
+};
+
+const mobileApplicationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: site.name,
+  description: site.description,
+  operatingSystem: "ANDROID, IOS",
+  applicationCategory: "FinanceApplication",
+  url: site.url,
+};
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-		<meta name="description" content={description} />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-      rel="stylesheet"
-    />
 
-    <title>{title}</title>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    <style>
-      body {
-        font-family: "DM Sans", sans-serif;
-      }
-    </style>
+    <meta name="theme-color" content={site.themeColor} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={absoluteOgImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} is:inline />
+    <script type="application/ld+json" set:html={JSON.stringify(mobileApplicationJsonLd)} is:inline />
+
+    <script>
+      import "@/scripts/reveal";
+    </script>
   </head>
   <body class="bg-background text-foreground">
     <Header client:load />
-    <slot />
-    <ScrollToTop client:load />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <ScrollToTop client:idle />
   </body>
 </html>

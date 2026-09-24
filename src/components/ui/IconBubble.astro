@@ -1,0 +1,41 @@
+---
+/**
+ * Círculo de icono con fondo de tono suave — el mismo patrón de IconBubble
+ * en fiao-mobil (src/ui/Layout.tsx): así una tarjeta de feature en la web se
+ * lee igual que una quick-action de la app, no como un ícono-en-cuadrado
+ * genérico de landing page.
+ */
+import Icon from "./Icon.astro";
+import type { Props as IconProps } from "./Icon.astro";
+
+export interface Props {
+  icon: IconProps["name"];
+  tone?: "brand" | "neutral" | "inverse";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { icon, tone = "brand", size = "md", class: className = "" } = Astro.props;
+
+const sizeClass = {
+  sm: "w-9 h-9 rounded-lg",
+  md: "w-12 h-12 rounded-xl",
+  lg: "w-16 h-16 rounded-2xl",
+}[size];
+
+const iconSizeClass = {
+  sm: "w-4 h-4",
+  md: "w-6 h-6",
+  lg: "w-7 h-7",
+}[size];
+
+const toneClass = {
+  brand: "bg-brand-50 text-brand-600",
+  neutral: "bg-ink-100 text-ink-600",
+  inverse: "bg-white/10 text-brand-300",
+}[tone];
+---
+
+<div class={`inline-flex items-center justify-center shrink-0 ${sizeClass} ${toneClass} ${className}`}>
+  <Icon name={icon} class={iconSizeClass} />
+</div>

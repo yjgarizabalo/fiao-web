@@ -1,10 +1,20 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/home/Hero';
+import Layout from "@/layouts/Layout.astro";
+import Hero from "@/components/home/Hero.astro";
+import TrustStrip from "@/components/home/TrustStrip.astro";
+import HowItWorks from "@/components/home/HowItWorks.astro";
+import FeatureHighlights from "@/components/home/FeatureHighlights.astro";
+import WhyFiao from "@/components/home/WhyFiao.astro";
+import FAQ from "@/components/home/FAQ.astro";
+import DownloadCTA from "@/components/home/DownloadCTA.astro";
 ---
 
-<Layout title='fiao'>
-  <main>
-    <Hero client:load />
-  </main>
+<Layout>
+  <Hero />
+  <TrustStrip />
+  <HowItWorks />
+  <FeatureHighlights />
+  <WhyFiao />
+  <FAQ />
+  <DownloadCTA />
 </Layout>

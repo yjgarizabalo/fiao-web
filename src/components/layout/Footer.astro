@@ -1,0 +1,32 @@
+---
+import { navItems, footerContent } from "@/data/landing";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-ink-50 border-t border-border py-14">
+  <div class="container flex flex-col gap-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+      <div class="flex flex-col gap-2">
+        <img src="/images/logo/logo.png" alt="fiao" class="h-7 w-auto self-start" />
+        <p class="text-ink-500 text-sm">{footerContent.tagline}</p>
+      </div>
+
+      <nav class="flex flex-wrap gap-x-6 gap-y-2">
+        {
+          navItems.map((item) => (
+            <a href={item.href} class="text-sm text-ink-600 hover:text-primary transition-colors">
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="border-t border-border pt-6">
+      <p class="text-xs text-ink-400">
+        © {year} fiao. {footerContent.copyright}
+      </p>
+    </div>
+  </div>
+</footer>
