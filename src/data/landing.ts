@@ -241,50 +241,91 @@ export interface FaqItem {
   answer: string;
 }
 
+export const faqContent = {
+  eyebrow: "Preguntas frecuentes",
+  title: "Lo que más nos preguntan los tenderos",
+  description: "Respuestas cortas y claras. Si te queda una duda, escríbenos.",
+  /** TODO(datos): confirmar que este buzón está activo (es el que muestra la app en Perfil). */
+  supportEmail: "soporte@fiao.app",
+};
+
+/**
+ * Cada respuesta va de 40 a 75 palabras y empieza por la respuesta directa ("Sí.",
+ * "No."): es el formato que los asistentes (Gemini, ChatGPT…) citan tal cual.
+ * Solo hechos del producto actual. No agregar precio ni funciones que no existan
+ * (notificaciones push, recuperar contraseña, uso sin internet).
+ * TODO(datos): cuando el precio esté definido, agregar "¿Cuánto cuesta fiao?".
+ */
 export const faqItems: FaqItem[] = [
   {
-    question: "¿Fiao funciona en Android y en iPhone?",
+    question: "¿Qué es fiao y para quién es?",
     answer:
-      "Sí. Fiao está hecha para funcionar igual de bien en Android y en iPhone, con la misma experiencia en los dos.",
+      "fiao es una app para llevar el fiado desde el celular, en vez del cuaderno. Es para tenderos y dueños de pequeños negocios en Colombia que les venden a crédito a sus clientes: anotas lo que fías, registras los abonos y sabes en todo momento quién te debe, cuánto y desde cuándo.",
   },
   {
-    question: "¿Reemplaza completamente el cuaderno del negocio?",
+    question: "¿fiao funciona en Android y en iPhone?",
     answer:
-      "Sí, para eso está pensada: lo que antes anotabas a mano ahora queda en la app, ordenado y disponible cuando lo necesites.",
+      "Sí. fiao está disponible para Android y para iPhone, y funciona igual en los dos: las mismas pantallas, las mismas funciones y tus mismas cuentas. Puedes usarla en el celular que ya tienes en la tienda, sin comprar nada adicional ni cambiar tu forma de trabajar.",
   },
   {
-    question: "¿Puedo manejar más de un negocio con la misma cuenta?",
+    question: "¿Cómo empiezo a usar fiao?",
     answer:
-      "Sí. Puedes registrar varios negocios desde una sola cuenta y cambiar entre ellos cuando quieras, sin mezclar clientes ni saldos.",
+      "Descarga la app, crea tu cuenta con tu nombre, tu cédula, tu correo y tu celular, y registra tu negocio. Después agregas a la primera persona a la que le fías y anotas lo que te debe. Todo el proceso toma pocos minutos y no necesitas saber nada de contabilidad.",
   },
   {
-    question: "¿Mis datos y los de mis clientes están seguros?",
+    question: "¿Mis clientes tienen que instalar fiao?",
     answer:
-      "Sí. La información de cada negocio queda separada de los demás, y solo tú puedes ver los datos de tus clientes y sus saldos.",
+      "No. fiao la usas tú, el dueño del negocio. Tus clientes no necesitan descargar nada ni crear una cuenta. Si quieres recordarles un pago, les llega un mensaje normal a su WhatsApp, enviado desde el tuyo, con el nombre de tu negocio y el saldo que tienen pendiente.",
+  },
+  {
+    question: "¿Puedo registrar abonos parciales?",
+    answer:
+      "Sí. Cuando un cliente te paga, puedes registrar el pago completo o solo una parte. Puedes abonarle a una deuda puntual o al saldo total, y en ese caso fiao reparte el pago entre sus deudas pendientes. El saldo se actualiza solo y queda el registro en su extracto.",
+  },
+  {
+    question: "¿Puedo ponerle fecha de pago a una deuda?",
+    answer:
+      "Sí. Al fiar puedes escoger un plazo de 8, 15 o 30 días, o dejarla sin plazo. Cuando la fecha pasa, fiao marca la deuda como vencida y te muestra hace cuánto venció, para que sepas a quién cobrarle primero sin tener que revisar fechas en el cuaderno.",
   },
   {
     question: "¿Cómo le recuerdo a un cliente que me debe?",
     answer:
-      "Desde el detalle del cliente puedes enviarle un recordatorio de pago ya redactado, directo por WhatsApp, sin salir de la app.",
+      "Desde la ficha del cliente tocas el botón de WhatsApp y fiao abre el chat con un mensaje amable ya escrito, con el nombre de tu negocio y el saldo exacto. Tú lo revisas y lo envías. También puedes escoger varios clientes y mandarles el recordatorio uno tras otro.",
+  },
+  {
+    question: "¿Puedo manejar más de un negocio con la misma cuenta?",
+    answer:
+      "Sí. Con una sola cuenta puedes crear varios negocios, por ejemplo dos tiendas o una tienda y una miscelánea. Cada negocio tiene sus propios clientes y saldos, sin mezclarse, y cambias de uno a otro con un toque desde la pantalla de inicio. También puedes ver a todos tus clientes juntos.",
+  },
+  {
+    question: "¿Quién puede ver la información de mis clientes?",
+    answer:
+      "Solo tú. Para entrar a fiao necesitas tu correo o tu cédula y tu contraseña, y cada negocio guarda sus clientes y saldos por separado. Tus clientes no ven nada dentro de la app: solo reciben el recordatorio por WhatsApp cuando tú decides enviárselo.",
+  },
+  {
+    question: "¿Qué pasa si se me pierde o se me daña el celular?",
+    answer:
+      "Tus cuentas no se pierden con el celular. La información queda guardada en tu cuenta de fiao, no en el teléfono. Instalas la app en el celular nuevo, entras con tu correo o tu cédula y tu contraseña, y ahí están tus negocios, tus clientes y sus saldos.",
   },
   {
     question: "¿Necesito internet para usar fiao?",
     answer:
-      "Sí, fiao se conecta a internet para mantener tus datos seguros y al día. Con una conexión de datos normal funciona sin problema.",
+      "Sí. fiao necesita conexión a internet para guardar cada fiado y cada abono en tu cuenta y mantener los saldos al día. Te sirven los datos del celular o el wifi de la tienda: no necesitas una conexión especial, basta con la que ya usas para WhatsApp.",
   },
 ];
 
 export const downloadCtaContent = {
-  headline: "Empieza a llevar tus vales sin cuaderno",
+  eyebrow: "Descarga fiao",
+  headline: "Deja el cuaderno. Lleva tus vales en el celular.",
   subheadline:
-    "Descarga fiao y ten el control de tu fiado siempre actualizado, en el celular que ya usas todos los días.",
-  availabilityNote: "Disponible para Android y iPhone",
+    "Descarga fiao, crea tu negocio y anota tu primer fiado hoy mismo. Siempre sabrás quién te debe y cuánto.",
+  availabilityNote,
 };
 
 export const footerContent = {
   tagline: "Tus vales, siempre al día.",
   productHeading: "Producto",
   downloadHeading: "Descarga la app",
-  availabilityNote: "Disponible para Android y iPhone",
+  availabilityNote,
   copyright: "Hecho en Colombia.",
 };
