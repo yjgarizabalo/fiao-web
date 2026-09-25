@@ -1,22 +1,27 @@
 ---
+/**
+ * Franja de confianza (patrón de tyba: justo debajo del hero). Solo hechos verificables
+ * del producto — ver el comentario de trustStripItems en src/data/landing.ts.
+ */
 import IconBubble from "@/components/ui/IconBubble.astro";
 import { trustStripItems } from "@/data/landing";
 ---
 
-<section class="py-12 sm:py-14 border-b border-border">
+<section aria-labelledby="confianza-title" class="py-12 sm:py-16">
+  <h2 id="confianza-title" class="sr-only">Lo básico que tienes que saber de fiao</h2>
   <div class="container">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
+    <ul class="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
       {
         trustStripItems.map((item) => (
-          <div class="flex items-start gap-4" data-reveal>
+          <li class="flex items-start gap-4" data-reveal>
             <IconBubble icon={item.icon} />
             <div class="flex flex-col gap-1">
-              <h3 class="font-bold text-ink-900">{item.title}</h3>
-              <p class="text-sm text-ink-500 leading-relaxed">{item.description}</p>
+              <h3 class="text-title-3 font-semibold">{item.title}</h3>
+              <p class="text-body text-text-muted">{item.description}</p>
             </div>
-          </div>
+          </li>
         ))
       }
-    </div>
+    </ul>
   </div>
 </section>

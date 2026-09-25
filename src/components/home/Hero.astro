@@ -1,62 +1,102 @@
 ---
-import { Image } from "astro:assets";
-import { heroContent } from "@/data/landing";
+/**
+ * Hero — el mismo degradado oscuro del splash y de la pantalla de Inicio de la app, con
+ * sus esquinas inferiores de 32 px. A la izquierda el mensaje (H1 = tagline del splash)
+ * y la descarga; a la derecha la pantalla real de Inicio, con dos "momentos" de la app
+ * flotando alrededor (un abono confirmado y un cliente al día).
+ *
+ * Rendimiento: la imagen es el LCP. Sale en AVIF/WebP a varios anchos, con dimensiones
+ * explícitas (no mueve el layout), fetchpriority="high" y precargada desde index.astro
+ * con las mismas URL (src/lib/hero-image.ts). Las piezas flotantes son HTML, no imagen.
+ */
+import { heroContent, availabilityNote } from "@/data/landing";
+import { getHeroImage, heroImageSource, HERO_SIZES } from "@/lib/hero-image";
+import Button from "@/components/ui/Button.astro";
 import StoreBadges from "@/components/ui/StoreBadges.astro";
-import heroImage from "@/assets/hero-banner-img.png";
-import { pressable } from "@/lib/ui";
+import ToastCard from "@/components/ui/ToastCard.astro";
+import DebtorRow from "@/components/ui/DebtorRow.astro";
+import Icon from "@/components/ui/Icon.astro";
+
+const { avif, webp } = await getHeroImage();
+const { toast, debtor } = heroContent.floating;
 ---
 
-<section class="relative pt-40 pb-20 sm:pt-48 sm:pb-28 overflow-hidden bg-hero-gradient" id="inicio">
-  <div class="container">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-      <div class="flex flex-col items-center lg:items-start gap-6 text-center lg:text-left">
-        <span
-          class="text-sm py-1.5 px-4 bg-white/10 rounded-pill border border-white/15 text-brand-300 font-semibold"
-        >
-          {heroContent.eyebrow}
-        </span>
+<section
+  id="inicio"
+  aria-labelledby="hero-title"
+  class="relative isolate overflow-hidden rounded-b-3xl bg-hero-gradient pt-28 pb-14 sm:pt-36 sm:pb-20 lg:rounded-b-[48px] lg:pt-40 lg:pb-24"
+>
+  <!-- Brillo verde detrás del celular: da profundidad sin cargar otra imagen. -->
+  <div
+    class="pointer-events-none absolute -z-10 right-[-20%] top-[30%] h-[520px] w-[520px] rounded-full bg-brand-500/20 blur-[120px] lg:right-[2%] lg:top-[18%]"
+    aria-hidden="true"
+  >
+  </div>
 
-        <h1 class="text-display sm:text-money-hero font-extrabold text-ink-0 max-w-xl">
-          {heroContent.headline}
-        </h1>
+  <div class="container grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-10">
+    <div class="flex flex-col items-start gap-6">
+      <span class="inline-flex items-center gap-2 rounded-pill bg-white/10 px-3.5 py-1.5 text-caption font-semibold text-brand-300 ring-1 ring-inset ring-white/15">
+        <Icon name="book-outline" size={15} />
+        {heroContent.eyebrow}
+      </span>
 
-        <p class="text-ink-0/75 text-lg max-w-md">
-          {heroContent.subheadline}
+      <h1 id="hero-title" class="max-w-[11ch] text-headline font-extrabold !text-white">
+        {heroContent.headline}
+      </h1>
+
+      <p class="max-w-[34rem] text-lead text-white/75">
+        {heroContent.subheadline}
+      </p>
+
+      <div class="flex w-full flex-col gap-4 pt-2">
+        <StoreBadges on="dark" size="responsive" />
+        <p class="inline-flex items-center gap-2 text-body font-medium text-white/75">
+          <Icon name="checkmark-circle" size={18} class="text-brand-300" />
+          {availabilityNote}
         </p>
-
-        <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
-          <a
-            href={heroContent.primaryCta.href}
-            class={`w-full sm:w-auto text-center bg-brand hover:bg-brand-400 text-ink-900 rounded-pill font-semibold py-3.5 px-8 ${pressable}`}
-          >
-            {heroContent.primaryCta.label}
-          </a>
-          <a
-            href={heroContent.secondaryCta.href}
-            class={`w-full sm:w-auto text-center text-ink-0 border border-white/20 hover:border-white/40 rounded-pill font-semibold py-3.5 px-8 ${pressable}`}
-          >
-            {heroContent.secondaryCta.label}
-          </a>
-        </div>
-
-        <p class="text-ink-0/60 text-sm font-medium">{heroContent.availabilityNote}</p>
-
-        <div class="pt-2">
-          <StoreBadges tone="light" />
-        </div>
       </div>
 
-      <div class="justify-self-center w-full max-w-sm">
-        <Image
-          src={heroImage}
+      <Button variant="glass" href={heroContent.secondaryCta.href} iconRight="chevron-forward" class="mt-1">
+        {heroContent.secondaryCta.label}
+      </Button>
+    </div>
+
+    <div class="relative mx-auto w-[78vw] max-w-[380px] sm:w-[380px] lg:w-[440px] lg:max-w-[440px]">
+      <picture>
+        <source type="image/avif" srcset={avif.srcSet.attribute} sizes={HERO_SIZES} />
+        <source type="image/webp" srcset={webp.srcSet.attribute} sizes={HERO_SIZES} />
+        <img
+          src={webp.src}
           alt={heroContent.image.alt}
-          width={584}
-          height={582}
-          class="w-full h-auto"
+          width={heroImageSource.width}
+          height={heroImageSource.height}
+          sizes={HERO_SIZES}
           loading="eager"
+          decoding="async"
           fetchpriority="high"
+          class="hero-phone h-auto w-full"
         />
+      </picture>
+
+      <!-- Momentos de la app: decorativos, la información ya está en el alt de la imagen. -->
+      <div class="absolute left-[-4%] top-[3%] animate-float sm:left-[-14%] lg:left-[-24%] lg:top-[1%]" aria-hidden="true">
+        <ToastCard class="scale-[0.82] origin-left sm:scale-100">{toast}</ToastCard>
+      </div>
+      <div
+        class="absolute bottom-[10%] right-[-4%] hidden w-[292px] animate-float [animation-delay:-3s] sm:block lg:right-[-16%]"
+        aria-hidden="true"
+      >
+        <DebtorRow name={debtor.name} phone={debtor.phone} balance={debtor.balance} class="shadow-lg" />
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  /* La foto trae su propio fondo oscuro: se funde con el degradado del hero con una
+     máscara radial, en vez de recortarla a mano. */
+  .hero-phone {
+    -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 48%, #000 62%, transparent 100%);
+    mask-image: radial-gradient(ellipse 72% 62% at 50% 48%, #000 62%, transparent 100%);
+  }
+</style>

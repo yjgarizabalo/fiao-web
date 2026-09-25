@@ -1,0 +1,205 @@
+---
+/**
+ * Header fijo. Arriba del todo es transparente sobre el hero oscuro (logo blanco); al
+ * bajar se vuelve vidrio blanco con borde fino, como la AppBar de la app. En páginas sin
+ * hero oscuro (`solid`) arranca ya en blanco.
+ *
+ * Antes era una isla de React (client:load): eso obligaba a bajar React completo solo
+ * para abrir un menú. Ahora es HTML + un script de pocas líneas.
+ */
+import { Image } from "astro:assets";
+import { navItems, heroContent } from "@/data/landing";
+import Button from "@/components/ui/Button.astro";
+import StoreBadges from "@/components/ui/StoreBadges.astro";
+import Icon from "@/components/ui/Icon.astro";
+import logoDark from "@/assets/logo-fiao.png";
+import logoLight from "@/assets/logo-fiao-blanco.png";
+
+export interface Props {
+  solid?: boolean;
+}
+
+const { solid = false } = Astro.props;
+---
+
+<header id="site-header" class="site-header fixed inset-x-0 top-0 z-50" data-solid={solid ? "true" : undefined}>
+  <a
+    href="#contenido"
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-body focus:font-semibold focus:text-ink-900"
+  >
+    Saltar al contenido
+  </a>
+
+  <div class="header-bar border-b border-transparent">
+    <div class="container flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+      <a href="/" class="press relative flex h-11 shrink-0 items-center" aria-label="fiao, ir al inicio">
+        <Image src={logoLight} alt="" height={28} densities={[1, 2]} class="logo-light h-7 w-auto" loading="eager" />
+        <Image src={logoDark} alt="" height={28} densities={[1, 2]} class="logo-dark absolute left-0 h-7 w-auto" loading="eager" />
+      </a>
+
+      <nav aria-label="Principal" class="hidden lg:block">
+        <ul class="flex items-center gap-1">
+          {
+            navItems.map((item) => (
+              <li>
+                <a href={item.href} class="nav-link press rounded-pill px-4 py-2 text-body font-medium">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <Button size="sm" href={heroContent.primaryCta.href}>Descargar</Button>
+        <button
+          type="button"
+          class="menu-toggle press press-icon inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+          aria-label="Abrir menú"
+        >
+          <Icon name="menu" size={24} class="icon-open" />
+          <Icon name="close" size={24} class="icon-close hidden" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú móvil: tarjeta flotante con el lenguaje de los bottom-sheets de la app. -->
+  <div id="mobile-menu" class="container lg:hidden" hidden>
+    <div class="mt-2 rounded-3xl border border-border bg-surface p-3 shadow-xl">
+      <nav aria-label="Principal móvil">
+        <ul class="flex flex-col">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="press press-card flex items-center justify-between rounded-lg px-4 py-3.5 text-body-lg font-semibold text-text hover:bg-ink-50"
+                >
+                  {item.label}
+                  <Icon name="chevron-forward" size={18} class="text-text-subtle" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="mt-2 border-t border-border px-4 pt-4 pb-2">
+        <StoreBadges />
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header .header-bar {
+    transition:
+      background-color var(--duration-normal) var(--ease-snappy),
+      border-color var(--duration-normal) var(--ease-snappy),
+      box-shadow var(--duration-normal) var(--ease-snappy);
+  }
+
+  /* Estado transparente (sobre el hero oscuro). */
+  .logo-dark {
+    opacity: 0;
+  }
+  .nav-link {
+    color: rgb(255 255 255 / 0.8);
+  }
+  .nav-link:hover {
+    color: #fff;
+    background: rgb(255 255 255 / 0.08);
+  }
+  .menu-toggle {
+    color: #fff;
+  }
+
+  /* Estado sólido: al bajar, con el menú abierto o en páginas sin hero. */
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .header-bar {
+    background: rgb(255 255 255 / 0.88);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-xs);
+    backdrop-filter: saturate(1.6) blur(14px);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  }
+  .site-header[data-open="true"] .header-bar {
+    background: #fff;
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .logo-dark {
+    opacity: 1;
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .logo-light {
+    opacity: 0;
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .nav-link {
+    color: var(--color-text-muted);
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .nav-link:hover {
+    color: var(--color-text-strong);
+    background: var(--color-ink-50);
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .menu-toggle {
+    color: var(--color-text-strong);
+  }
+
+  .logo-light,
+  .logo-dark {
+    transition: opacity var(--duration-normal) var(--ease-snappy);
+  }
+</style>
+
+<script>
+  const header = document.getElementById("site-header");
+  const toggle = header?.querySelector<HTMLButtonElement>(".menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+
+  if (header) {
+    // Header sólido al bajar. rAF evita trabajo por cada evento de scroll.
+    let ticking = false;
+    const update = () => {
+      header.dataset.scrolled = String(window.scrollY > 16);
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+
+  if (header && toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      header.dataset.open = String(open);
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+      toggle.querySelector(".icon-open")?.classList.toggle("hidden", open);
+      toggle.querySelector(".icon-close")?.classList.toggle("hidden", !open);
+    };
+
+    toggle.addEventListener("click", () => setOpen(menu.hidden));
+    menu.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!menu.hidden && !header.contains(event.target as Node)) setOpen(false);
+    });
+    // Si se agranda la ventana a escritorio con el menú abierto, se cierra.
+    window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => e.matches && setOpen(false));
+  }
+</script>

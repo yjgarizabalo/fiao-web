@@ -19,42 +19,49 @@ export const navItems: NavItem[] = [
   { label: "Cómo funciona", href: "#como-funciona" },
   { label: "Funciones", href: "#funciones" },
   { label: "Por qué fiao", href: "#por-que-fiao" },
-  { label: "Preguntas frecuentes", href: "#preguntas-frecuentes" },
+  { label: "Preguntas", href: "#preguntas-frecuentes" },
 ];
 
 /**
- * Enlaces de descarga. Fiao aún no tiene ficha publicada en las tiendas
- * (falta la cuenta de servicio de Google Play y el paso por TestFlight en
- * iOS — ver Fase 11.6 del CLAUDE.md de fiao-mobil), así que quedan como "#"
- * hasta que existan los enlaces reales. Cambiar aquí basta para activarlos.
+ * Enlaces de descarga.
+ * TODO(datos): fiao aún no tiene ficha publicada en App Store ni en Google Play (ver
+ * Fase 11.6 del CLAUDE.md de fiao-mobil). Mientras tanto los botones llevan a la sección
+ * de descarga. Cambiar estas dos URL basta para activarlos en toda la página y en el
+ * JSON-LD (que solo publica `installUrl` cuando la URL es real).
  */
 export const storeLinks = {
-  ios: "#",
-  android: "#",
+  ios: null as string | null,
+  android: null as string | null,
 };
+
+/** Nombre de cada tienda, como lo escriben Apple y Google. */
+export const storeNames = { ios: "App Store", android: "Google Play" } as const;
+
+export const availabilityNote = "Disponible para Android y iPhone";
 
 export const heroContent = {
   eyebrow: "¿Todavía fías en cuaderno?",
   headline: "Tus vales, siempre al día",
   subheadline:
-    "Fiao es la forma más simple de llevar el fiado de tu negocio: quién te debe, cuánto y desde cuándo, sin cuadernos ni cuentas que se pierden.",
+    "Anota lo que fías, registra cada abono y mira en un segundo quién te debe y cuánto. Todo desde tu celular, sin cuaderno.",
   primaryCta: { label: "Descargar fiao", href: "#descargar" },
   secondaryCta: { label: "Ver cómo funciona", href: "#como-funciona" },
-  availabilityNote: "Disponible para Android y iPhone",
+  availabilityNote,
   image: {
-    src: "/images/hero/hero-banner-img.png",
-    alt: "La app fiao abierta en un celular, mostrando el saldo por cobrar y los movimientos recientes de un negocio",
+    alt: "Pantalla de inicio de la app fiao en un celular: la tienda La Esquina tiene 120.000 pesos por cobrar y la lista de clientes que le deben",
+  },
+  /** Piezas flotantes alrededor del celular: momentos reales de la app. */
+  floating: {
+    toast: "Abono de $ 20.000 registrado",
+    debtor: { name: "María Pérez", phone: "301 555 0101", balance: 0 },
   },
 };
 
 /**
- * Franja de confianza justo debajo del hero, antes de cualquier feature —
- * siguiendo el patrón de tyba.com.co de resolver la ansiedad ("¿esto es
- * serio?") apenas se termina de leer el titular. A diferencia de tyba, fiao
- * no tiene certificaciones ni cifras de escala que mostrar todavía, así que
- * esta franja se queda con hechos verificables del producto real: cómo
- * separa los datos, que el recordatorio es un canal humano de verdad, y que
- * funciona igual en Android y iPhone.
+ * Franja de confianza justo debajo del hero — el patrón de tyba.com.co de resolver el
+ * "¿esto es serio?" apenas se termina de leer el titular. Fiao no tiene certificaciones
+ * ni cifras de escala que mostrar, así que la franja se queda con hechos verificables
+ * del producto real. No agregar cifras ni sellos que no existan.
  */
 export interface TrustStripItem {
   icon: IconName;
@@ -65,18 +72,23 @@ export interface TrustStripItem {
 export const trustStripItems: TrustStripItem[] = [
   {
     icon: "shield-checkmark-outline",
-    title: "Tus datos, solo tuyos",
-    description: "La información de cada negocio queda separada de los demás. Nadie más ve los saldos de tus clientes.",
+    title: "Cada negocio, sus cuentas",
+    description: "Los clientes y saldos de cada negocio quedan separados, y solo entras tú con tu cuenta.",
   },
   {
     icon: "logo-whatsapp",
-    title: "Recordatorios de verdad",
-    description: "El mensaje de cobro sale por el WhatsApp real de tu cliente, no por una notificación que nadie lee.",
+    title: "Cobras a tu manera",
+    description: "fiao te deja el recordatorio escrito. Tú lo revisas y lo mandas desde tu WhatsApp.",
   },
   {
     icon: "phone-portrait-outline",
     title: "Android y iPhone",
-    description: "La misma experiencia sin importar el celular que uses tú o el que tenga tu negocio.",
+    description: "Funciona igual en los dos. Úsala en el celular que ya tienes en la tienda.",
+  },
+  {
+    icon: "cash-outline",
+    title: "Hecha para Colombia",
+    description: "Todo en pesos colombianos y en español, pensada para la tienda de barrio.",
   },
 ];
 

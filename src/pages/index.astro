@@ -7,9 +7,22 @@ import FeatureHighlights from "@/components/home/FeatureHighlights.astro";
 import WhyFiao from "@/components/home/WhyFiao.astro";
 import FAQ from "@/components/home/FAQ.astro";
 import DownloadCTA from "@/components/home/DownloadCTA.astro";
+import { getHeroImage, HERO_SIZES } from "@/lib/hero-image";
+
+// Precarga del LCP con las mismas URL que usa el <picture> del hero.
+const { avif } = await getHeroImage();
 ---
 
 <Layout>
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    type="image/avif"
+    imagesrcset={avif.srcSet.attribute}
+    imagesizes={HERO_SIZES}
+    fetchpriority="high"
+  />
   <Hero />
   <TrustStrip />
   <HowItWorks />

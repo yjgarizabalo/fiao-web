@@ -1,6 +1,6 @@
 ---
 import "@/styles/global.css";
-import Header from "@/components/layout/Header";
+import Header from "@/components/layout/Header.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ScrollToTop from "@/components/layout/ScrollToTop";
 import { site } from "@/lib/seo";
@@ -11,6 +11,8 @@ export interface Props {
   ogImage?: string;
   /** Para páginas que no deben indexarse, como 404. */
   noindex?: boolean;
+  /** Header blanco desde el inicio (páginas sin hero oscuro). */
+  solidHeader?: boolean;
 }
 
 const {
@@ -18,6 +20,7 @@ const {
   description = site.description,
   ogImage = site.ogImage,
   noindex = false,
+  solidHeader = false,
 } = Astro.props;
 
 const pageTitle = title === site.name ? site.name : `${title} · ${site.name}`;
@@ -80,13 +83,15 @@ const mobileApplicationJsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} is:inline />
     <script type="application/ld+json" set:html={JSON.stringify(mobileApplicationJsonLd)} is:inline />
 
+    <slot name="head" />
+
     <script>
       import "@/scripts/reveal";
     </script>
   </head>
   <body>
-    <Header client:load />
-    <main>
+    <Header solid={solidHeader} />
+    <main id="contenido">
       <slot />
     </main>
     <Footer />
