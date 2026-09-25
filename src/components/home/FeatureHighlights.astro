@@ -16,7 +16,7 @@ const middle = featureHighlights.slice(1, -1);
 const last = featureHighlights.at(-1);
 ---
 
-<section id="funciones" aria-labelledby="funciones-title" class="py-16 sm:py-24">
+<section id="funciones" aria-labelledby="funciones-title" class="defer-render py-16 sm:py-24">
   <div class="container flex flex-col gap-12 sm:gap-16">
     <SectionHeading
       id="funciones-title"
@@ -35,14 +35,14 @@ const last = featureHighlights.at(-1);
               <p class="text-body-lg text-text-muted">{lead.description}</p>
             </div>
             <div class="flex flex-col gap-2.5 bg-bg p-5 sm:p-6" aria-hidden="true">
-              <div class="flex h-[46px] items-center gap-2 rounded-pill bg-ink-100 px-4 text-body text-text-subtle">
+              <div class="flex h-[46px] items-center gap-2 rounded-pill bg-ink-100 px-4 text-body text-ink-600">
                 <Icon name="search-outline" size={18} />
                 <span class="truncate">Buscar por nombre o teléfono</span>
               </div>
               <div class="grid grid-cols-3 rounded-pill bg-ink-100 p-1 text-center text-caption font-semibold">
-                <span class="py-2 text-text-muted">Todos</span>
+                <span class="py-2 text-ink-600">Todos</span>
                 <span class="rounded-pill bg-surface py-2 text-brand-text shadow-xs">Deben</span>
-                <span class="py-2 text-text-muted">Al día</span>
+                <span class="py-2 text-ink-600">Al día</span>
               </div>
               <DebtorRow name="Emanuel Jesús" phone="300 123 4589" balance={70000} />
               <DebtorRow name="Andrés Ortiz" phone="300 123 4567" balance={50000} overdue />

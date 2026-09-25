@@ -7,6 +7,9 @@ import path from 'path';
 // TODO(datos): confirmar el dominio real de producción (también en src/lib/seo.ts).
 export default defineConfig({
   site: 'https://fiao.app',
+  // Toda la CSS va en línea: es una sola página y así no hay petición que bloquee el
+  // primer render (≈8 KB comprimida).
+  build: { inlineStylesheets: 'always' },
   integrations: [
     react(),
     // /kit es la vitrina interna del design system y /404 no es una página real.

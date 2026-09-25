@@ -103,6 +103,12 @@ const { solid = false } = Astro.props;
   }
 
   /* Estado transparente (sobre el hero oscuro). */
+  .site-header {
+    --focus-ring: var(--color-brand-300);
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) {
+    --focus-ring: var(--color-brand-600);
+  }
   .logo-dark {
     opacity: 0;
   }

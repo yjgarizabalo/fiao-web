@@ -20,17 +20,10 @@
     "@astrojs/check": "^0.9.7",
     "@astrojs/react": "^4.0.0",
     "@astrojs/sitemap": "^3.7.4",
-    "@iconify/react": "^5.2.1",
     "@tailwindcss/vite": "^4.1.0",
     "astro": "^6.0.7",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.562.0",
     "react": "^19.0.0",
-    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
-    "react-intersection-observer": "^9.16.0",
-    "tailwind-merge": "^3.0.0",
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {

@@ -14,8 +14,14 @@ const moneyFormatter = new Intl.NumberFormat("es-CO", {
 /** 15000 → "$ 15.000" (COP, sin decimales, igual que la app). */
 export const formatMoney = (value: number): string => moneyFormatter.format(value);
 
-/** Paleta de avatares de la app: el color sale de un hash estable del nombre. */
-const AVATAR_COLORS = ["#00B26B", "#5B7CFA", "#7C5CF5", "#C4479B", "#E0714A", "#F5A524", "#0FA3A3", "#3B82F6"] as const;
+/**
+ * Paleta de avatares: el color sale de un hash estable del nombre, con el mismo orden
+ * que la app (un nombre cae en el mismo tono en los dos lados). En la web cada tono va
+ * oscurecido lo justo para que las iniciales blancas pasen AA (≥ 4.5:1); en la app
+ *   #00B26B #5B7CFA #7C5CF5 #C4479B #E0714A #F5A524 #0FA3A3 #3B82F6
+ * quedan entre 2.0 y 4.5:1.
+ */
+const AVATAR_COLORS = ["#008550", "#506DDC", "#7A5AF0", "#BE4596", "#B55C3C", "#9D6A17", "#0C8282", "#3472D8"] as const;
 
 export const avatarColor = (name: string): string => {
   let hash = 0;

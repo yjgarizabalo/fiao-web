@@ -17,7 +17,7 @@ const { fiar, cobrar } = inStoreContent;
 const balance = formatMoney(whatsappExample.balance);
 ---
 
-<section id="en-la-tienda" aria-labelledby="en-la-tienda-title" class="bg-bg py-16 sm:py-24">
+<section id="en-la-tienda" aria-labelledby="en-la-tienda-title" class="defer-render bg-bg py-16 sm:py-24">
   <div class="container flex flex-col gap-16 sm:gap-24">
     <SectionHeading id="en-la-tienda-title" eyebrow={inStoreContent.eyebrow} title={inStoreContent.title} />
 
@@ -68,10 +68,10 @@ const balance = formatMoney(whatsappExample.balance);
             <div>
               <p class="mb-1.5 text-caption font-semibold text-text-muted">¿Cuándo te lo paga?</p>
               <div class="grid grid-cols-4 rounded-pill bg-ink-100 p-1 text-center text-caption font-semibold">
-                <span class="py-2 text-text-muted">Sin plazo</span>
-                <span class="py-2 text-text-muted">8 días</span>
+                <span class="py-2 text-ink-600">Sin plazo</span>
+                <span class="py-2 text-ink-600">8 días</span>
                 <span class="rounded-pill bg-surface py-2 text-brand-text shadow-xs">15 días</span>
-                <span class="py-2 text-text-muted">30 días</span>
+                <span class="py-2 text-ink-600">30 días</span>
               </div>
               <p class="mt-2 inline-flex items-center gap-1.5 text-caption text-text-muted">
                 <Icon name="calendar-outline" size={14} /> Vence el 9 de octubre
@@ -105,7 +105,7 @@ const balance = formatMoney(whatsappExample.balance);
                 Le recuerdo con todo el aprecio que tiene un saldo pendiente de <strong class="tabular">{balance}</strong>.
               </p>
               <p class="mt-2">Cuando pueda me avisa para coordinar el pago. ¡Muchas gracias!</p>
-              <p class="mt-1 text-right text-[11px] text-[#667781]">9:41 ✓✓</p>
+              <p class="mt-1 text-right text-[11px] text-[#54656F]">9:41 ✓✓</p>
             </div>
           </div>
         </div>

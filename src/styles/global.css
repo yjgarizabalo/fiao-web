@@ -216,7 +216,9 @@
 
   /* Foco visible y consistente en todo el sitio (navegación por teclado). */
   :focus-visible {
-    outline: 2px solid var(--color-brand-500);
+    /* 3.9:1 sobre blanco. En fondos oscuros (.on-dark) cambia a brand-300: 4.9 a 10.5:1
+       en todo el degradado hero, donde brand-600 bajaría a 2.3:1. */
+    outline: 2px solid var(--focus-ring, var(--color-brand-600));
     outline-offset: 3px;
   }
 
@@ -246,10 +248,12 @@
 
 @utility bg-hero-gradient {
   background: var(--gradient-hero);
+  --focus-ring: var(--color-brand-300);
 }
 
 @utility bg-hero-gradient-wide {
   background: var(--gradient-hero-wide);
+  --focus-ring: var(--color-brand-300);
 }
 
 /* Cifras de dinero: dígitos de ancho fijo, como moneyHero / money en la app. */
@@ -359,13 +363,23 @@
 
 /* ── Scroll-reveal (lo activa src/scripts/reveal.ts) ──────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal-ready [data-reveal]:not(.is-visible) {
+  [data-reveal].reveal-pending:not(.is-visible) {
     opacity: 0;
     transform: translateY(16px);
   }
-  .reveal-ready [data-reveal] {
+  [data-reveal].reveal-pending {
     transition:
       opacity var(--duration-slow) var(--ease-snappy),
       transform var(--duration-slow) var(--ease-snappy);
   }
+}
+
+/* ── Render diferido de lo que está bajo el pliegue ─────────────────────────── */
+/* Las secciones con `defer-render` no se maquetan hasta acercarse a la pantalla: baja
+   mucho el trabajo de estilo y layout del primer render (y con eso el INP temprano).
+   `contain-intrinsic-size: auto` recuerda el alto real una vez pintada, para que la
+   barra de scroll no salte. */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }

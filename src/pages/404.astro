@@ -1,21 +1,22 @@
 ---
+/** 404 — con el tono de la app (EmptyState: burbuja de ícono, título y una acción). */
 import Layout from "@/layouts/Layout.astro";
+import Button from "@/components/ui/Button.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
 ---
 
 <Layout title="Página no encontrada" description="Esta página no existe en fiao." noindex solidHeader>
-  <section class="min-h-[70vh] flex items-center justify-center py-24">
-    <div class="container flex flex-col items-center text-center gap-5">
-      <span class="text-money-hero font-extrabold text-brand-500">404</span>
-      <h1 class="text-title-1 font-bold text-ink-900">Esta página se perdió, como una hoja del cuaderno</h1>
-      <p class="text-ink-500 max-w-md">
+  <section aria-labelledby="notfound-title" class="flex min-h-[70vh] items-center justify-center py-28">
+    <div class="container flex flex-col items-center gap-5 text-center">
+      <IconBubble icon="book-outline" size={76} />
+      <p class="eyebrow text-brand-text">Error 404</p>
+      <h1 id="notfound-title" class="max-w-xl text-title-1 font-extrabold sm:text-display">
+        Esta página se perdió, como una hoja del cuaderno
+      </h1>
+      <p class="max-w-md text-body-lg text-text-muted">
         El enlace que seguiste no existe o cambió de lugar. Vuelve al inicio para seguir conociendo fiao.
       </p>
-      <a
-        href="/"
-        class="mt-2 bg-brand text-ink-900 rounded-pill font-semibold py-3 px-8 hover:bg-brand-600 transition-colors"
-      >
-        Volver al inicio
-      </a>
+      <Button href="/" size="lg" class="mt-2">Volver al inicio</Button>
     </div>
   </section>
 </Layout>

@@ -10,7 +10,7 @@ import Badge from "@/components/ui/Badge.astro";
 import { howItWorksContent, howItWorksSteps } from "@/data/landing";
 ---
 
-<section id="como-funciona" aria-labelledby="como-funciona-title" class="bg-bg py-16 sm:py-24">
+<section id="como-funciona" aria-labelledby="como-funciona-title" class="defer-render bg-bg py-16 sm:py-24">
   <div class="container flex flex-col gap-12 sm:gap-16">
     <SectionHeading
       id="como-funciona-title"
@@ -56,8 +56,8 @@ import { howItWorksContent, howItWorksSteps } from "@/data/landing";
                 <div class="flex w-full max-w-[270px] flex-col items-center gap-3">
                   <div class="grid w-full grid-cols-3 rounded-pill bg-ink-100 p-1 text-center text-caption font-semibold">
                     <span class="rounded-pill bg-surface py-2 text-brand-text shadow-xs">Pagó todo</span>
-                    <span class="py-2 text-text-muted">La mitad</span>
-                    <span class="py-2 text-text-muted">Otro</span>
+                    <span class="py-2 text-ink-600">La mitad</span>
+                    <span class="py-2 text-ink-600">Otro</span>
                   </div>
                   <div class="inline-flex items-center gap-2 rounded-lg bg-ink-900 px-3.5 py-2.5 text-caption font-semibold text-white shadow-md">
                     <Icon name="checkmark-circle" size={16} class="text-brand-300" />
