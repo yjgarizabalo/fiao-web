@@ -43,7 +43,7 @@ const iconSize = size === "md" ? 22 : 24;
       return (
         <li>
           <a
-            href={store.href ?? "#descargar"}
+            href={store.href ?? "/#descargar"}
             class={`press press-button inline-flex items-center rounded-md bg-ink-900 text-white ${sizeClass} ${ring}`}
             aria-label={`Descargar fiao en ${storeNames[store.key]}`}
             {...(isLive ? { target: "_blank", rel: "noopener" } : {})}

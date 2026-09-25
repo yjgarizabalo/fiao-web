@@ -1,53 +1,103 @@
 ---
-import { navItems, footerContent } from "@/data/landing";
+/**
+ * Footer — la estructura de tyba (marca + columnas + franja legal) con los datos reales
+ * de fiao: navegación, ayuda, descarga y una aclaración honesta de qué es y qué no es
+ * fiao. Las columnas sin datos (Legal, redes) no se muestran vacías: quedan como TODO.
+ */
+import { Image } from "astro:assets";
+import { navItems, footerContent, faqContent, storeNames } from "@/data/landing";
 import StoreBadges from "@/components/ui/StoreBadges.astro";
+import Icon from "@/components/ui/Icon.astro";
+import logo from "@/assets/logo-fiao.png";
 
 const year = new Date().getFullYear();
+
+const helpLinks = [
+  { label: "Preguntas frecuentes", href: "/#preguntas-frecuentes" },
+  { label: "¿Qué es fiao?", href: "/#que-es-fiao" },
+  { label: faqContent.supportEmail, href: `mailto:${faqContent.supportEmail}`, icon: "mail-outline" as const },
+];
+
+/**
+ * TODO(datos): agregar Términos y condiciones y Política de privacidad cuando existan
+ * (las exigen App Store y Google Play para publicar la app). Con una URL aquí, la
+ * columna "Legal" aparece sola.
+ */
+const legalLinks: { label: string; href: string }[] = [];
+
+/** TODO(datos): cuentas oficiales de redes sociales, si las hay. */
+const linkClass = "text-body text-text-muted transition-colors hover:text-text-strong";
 ---
 
-<footer class="bg-ink-50 border-t border-border py-14">
-  <div class="container flex flex-col gap-10">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-      <div class="flex flex-col gap-2">
-        <img src="/images/logo/logo.png" alt="fiao" class="h-7 w-auto self-start" />
-        <p class="text-ink-500 text-sm max-w-xs">{footerContent.tagline}</p>
+<footer class="border-t border-border bg-bg" aria-labelledby="footer-title">
+  <h2 id="footer-title" class="sr-only">Información de fiao</h2>
+  <div class="container flex flex-col gap-12 py-14 sm:py-16">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]">
+      <div class="flex flex-col gap-4">
+        <a href="/" class="press self-start" aria-label="fiao, ir al inicio">
+          <Image src={logo} alt="" height={30} densities={[1, 2]} class="h-[30px] w-auto" loading="lazy" />
+        </a>
+        <p class="max-w-xs text-body-lg font-semibold text-text-strong">{footerContent.tagline}</p>
+        <p class="max-w-xs text-body text-text-muted">
+          La app para llevar el fiado de tu tienda desde el celular, sin cuaderno.
+        </p>
       </div>
 
-      <div class="flex flex-col gap-3">
-        <h3 class="text-xs font-semibold uppercase tracking-wide text-ink-400">
-          {footerContent.productHeading}
-        </h3>
-        <nav class="flex flex-col gap-2">
+      <nav aria-labelledby="footer-producto" class="flex flex-col gap-4">
+        <h3 id="footer-producto" class="eyebrow text-text-muted">{footerContent.productHeading}</h3>
+        <ul class="flex flex-col gap-3">
+          {navItems.map((item) => (<li><a href={item.href} class={linkClass}>{item.label}</a></li>))}
+        </ul>
+      </nav>
+
+      <nav aria-labelledby="footer-ayuda" class="flex flex-col gap-4">
+        <h3 id="footer-ayuda" class="eyebrow text-text-muted">Ayuda</h3>
+        <ul class="flex flex-col gap-3">
           {
-            navItems.map((item) => (
-              <a href={item.href} class="text-sm text-ink-600 hover:text-brand-text transition-colors">
-                {item.label}
-              </a>
+            helpLinks.map((link) => (
+              <li>
+                <a href={link.href} class={`${linkClass} inline-flex items-center gap-2`}>
+                  {link.icon && <Icon name={link.icon} size={16} />}
+                  {link.label}
+                </a>
+              </li>
             ))
           }
-        </nav>
-      </div>
+        </ul>
+      </nav>
 
-      <div class="flex flex-col gap-3">
-        <h3 class="text-xs font-semibold uppercase tracking-wide text-ink-400">
-          {footerContent.downloadHeading}
-        </h3>
+      {
+        legalLinks.length > 0 && (
+          <nav aria-labelledby="footer-legal" class="flex flex-col gap-4">
+            <h3 id="footer-legal" class="eyebrow text-text-muted">Legal</h3>
+            <ul class="flex flex-col gap-3">
+              {legalLinks.map((link) => (<li><a href={link.href} class={linkClass}>{link.label}</a></li>))}
+            </ul>
+          </nav>
+        )
+      }
+
+      <div class="flex flex-col gap-4">
+        <h3 class="eyebrow text-text-muted">{footerContent.downloadHeading}</h3>
         <StoreBadges />
-        <p class="text-xs text-ink-400">{footerContent.availabilityNote}</p>
+        <p class="inline-flex items-center gap-2 text-body text-text-muted">
+          <Icon name="checkmark-circle" size={16} class="text-brand-500" />
+          {footerContent.availabilityNote}
+        </p>
       </div>
     </div>
 
-    <!--
-      TODO: cuando existan páginas reales de Legal (términos, privacidad) y un
-      canal de Contacto propio, o cuentas oficiales de redes sociales, agregar
-      sus columnas aquí siguiendo el mismo patrón. Hoy no se renderizan vacías
-      para no mostrar una UI que parezca rota.
-    -->
-
-    <div class="border-t border-border pt-6">
-      <p class="text-xs text-ink-400">
-        © {year} fiao. {footerContent.copyright}
+    <div class="flex flex-col gap-3 border-t border-border pt-6 text-caption text-text-muted">
+      <p>
+        fiao es una herramienta para que lleves las cuentas del fiado de tu negocio. No presta dinero, no otorga
+        créditos ni recibe pagos: los acuerdos y los pagos son entre tú y tus clientes.
       </p>
+      <div class="flex flex-col justify-between gap-2 sm:flex-row">
+        <p>© {year} fiao. {footerContent.copyright}</p>
+        <p>
+          Android y {storeNames.android} son marcas de Google LLC. iPhone y {storeNames.ios} son marcas de Apple Inc.
+        </p>
+      </div>
     </div>
   </div>
 </footer>

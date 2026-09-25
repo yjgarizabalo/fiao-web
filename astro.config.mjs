@@ -4,10 +4,19 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-// site: confirmar el dominio real de producción antes de publicar (ver src/lib/seo.ts)
+// TODO(datos): confirmar el dominio real de producción (también en src/lib/seo.ts).
 export default defineConfig({
   site: 'https://fiao.app',
-  integrations: [react(), sitemap({ filter: (page) => !page.includes('/kit') })],
+  integrations: [
+    react(),
+    // /kit es la vitrina interna del design system y /404 no es una página real.
+    sitemap({
+      filter: (page) => !page.includes('/kit') && !page.includes('/404'),
+      changefreq: 'monthly',
+      lastmod: new Date(),
+      i18n: { defaultLocale: 'es', locales: { es: 'es-CO' } },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     resolve: {

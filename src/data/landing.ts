@@ -16,10 +16,10 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "Funciones", href: "#funciones" },
-  { label: "Por qué fiao", href: "#por-que-fiao" },
-  { label: "Preguntas", href: "#preguntas-frecuentes" },
+  { label: "Cómo funciona", href: "/#como-funciona" },
+  { label: "Funciones", href: "/#funciones" },
+  { label: "Por qué fiao", href: "/#por-que-fiao" },
+  { label: "Preguntas", href: "/#preguntas-frecuentes" },
 ];
 
 /**
@@ -44,8 +44,8 @@ export const heroContent = {
   headline: "Tus vales, siempre al día",
   subheadline:
     "Anota lo que fías, registra cada abono y mira en un segundo quién te debe y cuánto. Todo desde tu celular, sin cuaderno.",
-  primaryCta: { label: "Descargar fiao", href: "#descargar" },
-  secondaryCta: { label: "Ver cómo funciona", href: "#como-funciona" },
+  primaryCta: { label: "Descargar fiao", href: "/#descargar" },
+  secondaryCta: { label: "Ver cómo funciona", href: "/#como-funciona" },
   availabilityNote,
   image: {
     alt: "Pantalla de inicio de la app fiao en un celular: la tienda La Esquina tiene 120.000 pesos por cobrar y la lista de clientes que le deben",
@@ -125,7 +125,7 @@ export const howItWorksSteps: Step[] = [
     number: "1",
     title: "Crea tu negocio",
     description:
-      "Te registras con tu correo o tu cédula y creas tu tienda en un minuto. ¿Tienes más de una? Las agregas todas y cambias entre ellas con un toque.",
+      "Creas tu cuenta y registras tu tienda en un par de minutos. ¿Tienes más de una? Las agregas todas y cambias entre ellas con un toque.",
   },
   {
     number: "2",
