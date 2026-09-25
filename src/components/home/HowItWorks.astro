@@ -1,6 +1,20 @@
 ---
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { howItWorksSteps } from "@/data/landing";
+
+// Los mismos pasos que se ven en pantalla alimentan el HowTo: nunca pueden desincronizarse.
+const howToJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "Cómo funciona fiao",
+  description:
+    "Los tres pasos para dejar de fiar en cuaderno y llevar el fiado de tu negocio desde el celular.",
+  step: howItWorksSteps.map((step) => ({
+    "@type": "HowToStep",
+    name: step.title,
+    text: step.description,
+  })),
+};
 ---
 
 <section id="como-funciona" class="py-20 sm:py-28">
@@ -24,3 +38,5 @@ import { howItWorksSteps } from "@/data/landing";
     </div>
   </div>
 </section>
+
+<script type="application/ld+json" set:html={JSON.stringify(howToJsonLd)} is:inline />

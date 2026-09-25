@@ -227,5 +227,8 @@ export const downloadCtaContent = {
 
 export const footerContent = {
   tagline: "Tus vales, siempre al día.",
+  productHeading: "Producto",
+  downloadHeading: "Descarga la app",
+  availabilityNote: "Disponible para Android y iPhone",
   copyright: "Hecho en Colombia.",
 };
