@@ -33,7 +33,7 @@ Busca `TODO(datos)` en el código:
 - Dominio real de producción (`src/lib/seo.ts` y `astro.config.mjs`).
 - URL de App Store y Google Play (`storeLinks` en `src/data/landing.ts`): al ponerlas se activan
   en todos los botones y en el JSON-LD.
-- Confirmar el buzón `soporte@fiao.app`.
+- Confirmar el buzón `soporte@elfiao.com`.
 - Páginas de Términos y Privacidad (`legalLinks` en `Footer.astro`) y redes sociales.
 - Precio, para la pregunta "¿Cuánto cuesta fiao?".
 - Número de WhatsApp de fiao (`whatsappContact` en `src/data/landing.ts`; hoy es un marcador).

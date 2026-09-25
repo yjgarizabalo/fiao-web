@@ -246,7 +246,7 @@ export const faqContent = {
   title: "Lo que más nos preguntan los tenderos",
   description: "Respuestas cortas y claras. Si te queda una duda, escríbenos.",
   /** TODO(datos): confirmar que este buzón está activo (es el que muestra la app en Perfil). */
-  supportEmail: "soporte@fiao.app",
+  supportEmail: "soporte@elfiao.com",
 };
 
 /**
