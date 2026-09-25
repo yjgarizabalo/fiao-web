@@ -1,0 +1,22 @@
+---
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  align?: "left" | "center";
+  tone?: "dark" | "light";
+}
+
+const { eyebrow, title, description, align = "center", tone = "light" } = Astro.props;
+
+const alignClass = align === "center" ? "text-center items-center mx-auto" : "text-left items-start";
+const eyebrowClass = tone === "dark" ? "text-brand-300" : "text-brand-600";
+const titleClass = tone === "dark" ? "text-ink-0" : "text-ink-900";
+const descriptionClass = tone === "dark" ? "text-ink-0/70" : "text-ink-500";
+---
+
+<div class={`flex flex-col gap-3 max-w-2xl ${alignClass}`} data-reveal>
+  {eyebrow && <span class={`text-sm font-semibold uppercase tracking-wide ${eyebrowClass}`}>{eyebrow}</span>}
+  <h2 class={`text-title-1 sm:text-display font-extrabold ${titleClass}`}>{title}</h2>
+  {description && <p class={`text-base sm:text-lg ${descriptionClass}`}>{description}</p>}
+</div>

@@ -1,142 +1,113 @@
-"use client";
 import { useEffect, useState } from "react";
-import { headerData } from "@/data/index";
-
+import { navItems, heroContent } from "@/data/landing";
+import { pressable } from "@/lib/ui";
 
 const Header = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const [sticky, setSticky] = useState(false);
   const [activeHash, setActiveHash] = useState("");
-  const [signInOpen, setSignInOpen] = useState(false);
-  const [signUpOpen, setSignUpOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setSticky(window.scrollY >= 80);
     const handleHashChange = () => setActiveHash(window.location.hash);
-
-    window.addEventListener("scroll", handleScroll);
     window.addEventListener("hashchange", handleHashChange);
     handleHashChange();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("hashchange", handleHashChange);
-    };
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
+  // Bloquea el scroll del body mientras el menú móvil está abierto.
+  useEffect(() => {
+    document.body.style.overflow = navbarOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [navbarOpen]);
+
+  const navLinkClass = (href: string) =>
+    `text-base font-medium transition-colors ${
+      activeHash === href ? "text-primary" : "text-ink-700 hover:text-primary"
+    }`;
+
   return (
-    <>
-      <header
-        className={`fixed top-0 z-40 w-full pb-5 transition-all duration-300 ${
-          sticky ? "shadow-lg bg-background pt-5" : "shadow-none pt-7"
-        }`}
-      >
-        <div className="lg:py-0 py-2">
-          <div className="container px-4 flex items-center justify-between">
-            {/* Logo */}
+    <header className="fixed inset-x-0 top-0 z-40 px-4 pt-4 sm:px-6 sm:pt-5">
+      {/* Barra flotante tipo cápsula, separada de los bordes y con sombra —
+          en vez del header tradicional pegado de borde a borde. */}
+      <div className="relative mx-auto w-full max-w-8xl rounded-2xl border border-border bg-background shadow-lg">
+        <div className="flex items-center justify-between gap-4 px-5 py-3 sm:px-6 sm:py-4">
+          <a href="/" onClick={() => setActiveHash("")} className="shrink-0">
+            <img src="/images/logo/logo.png" alt="fiao" className="h-7 w-auto sm:h-8" />
+          </a>
+
+          <nav className="hidden lg:flex items-center gap-9">
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href} onClick={() => setActiveHash(item.href)} className={navLinkClass(item.href)}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
             <a
-              href="/"
-              onClick={() => setActiveHash("")}
-              className="cursor-pointer"
+              href={heroContent.primaryCta.href}
+              className={`bg-primary text-primary-foreground px-4 py-2 sm:px-5 sm:py-2.5 rounded-pill hover:bg-brand-600 font-semibold text-sm whitespace-nowrap ${pressable}`}
             >
-              <img
-                src="/images/logo/logo.png"
-                alt="logo"
-                className="h-8 w-auto"
-              />
+              {heroContent.primaryCta.label}
             </a>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex grow items-center gap-8 justify-center">
-              {headerData.map((item, index) => (
+            <button
+              className="lg:hidden relative w-8 h-8 shrink-0 flex flex-col items-center justify-center gap-1.5"
+              aria-label={navbarOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={navbarOpen}
+              onClick={() => setNavbarOpen(!navbarOpen)}
+            >
+              <span
+                className={`block w-5 h-0.5 bg-ink-900 rounded-full transition-transform duration-300 ${
+                  navbarOpen ? "translate-y-2 rotate-45" : ""
+                }`}
+              />
+              <span
+                className={`block w-5 h-0.5 bg-ink-900 rounded-full transition-opacity duration-300 ${
+                  navbarOpen ? "opacity-0" : ""
+                }`}
+              />
+              <span
+                className={`block w-5 h-0.5 bg-ink-900 rounded-full transition-transform duration-300 ${
+                  navbarOpen ? "-translate-y-2 -rotate-45" : ""
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Menú móvil: otra tarjeta flotante redondeada, no un drawer de
+            pantalla completa — mantiene el mismo lenguaje visual de la cápsula. */}
+        {navbarOpen && (
+          <div className="lg:hidden absolute inset-x-0 top-full mt-3 rounded-2xl border border-border bg-background shadow-lg p-5">
+            <nav className="flex flex-col">
+              {navItems.map((item) => (
                 <a
-                  key={index}
+                  key={item.href}
                   href={item.href}
-                  onClick={() => setActiveHash(item.href.includes("#") ? "#" + item.href.split("#")[1] : "")}
-                  className={`text-base font-medium transition-colors hover:text-primary ${
-                    activeHash === "#" + item.href.split("#")[1]
-                      ? "text-primary"
-                      : "text-[#1a1a1a]"
-                  }`}
+                  onClick={() => {
+                    setActiveHash(item.href);
+                    setNavbarOpen(false);
+                  }}
+                  className={`py-3 border-b border-border last:border-b-0 ${navLinkClass(item.href)}`}
                 >
                   {item.label}
                 </a>
               ))}
             </nav>
-
-            {/* Desktop contacto Buttons */}
-            <div className="lg:flex hidden gap-4 h-10">
-            
-              <button
-                onClick={() => setSignUpOpen(true)}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-transparent hover:text-primary h-full transition-all duration-300 font-medium hover:border hover:border-primary text-sm"
-              >
-                Contacto
-              </button>
-            </div>
-
-            {/* Mobile Hamburger */}
-            <button
-              className="block lg:hidden p-2 rounded-lg flex flex-col gap-1.5"
-              aria-label="Toggle mobile menu"
-              onClick={() => setNavbarOpen(!navbarOpen)}
-            >
-              <span className="block w-6 h-0.5 bg-[#1a1a1a]"></span>
-              <span className="block w-6 h-0.5 bg-[#1a1a1a]"></span>
-              <span className="block w-6 h-0.5 bg-[#1a1a1a]"></span>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {navbarOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur-sm">
-            <div className="flex flex-col h-full w-full max-w-xs ml-auto bg-background border-l border-border p-6">
-              <div className="flex items-center justify-between mb-6">
-                <a href="/" onClick={() => { setActiveHash(""); setNavbarOpen(false); }}>
-                  <img src="/images/logo/logo.png" alt="logo" width={120} height={28} />
-                </a>
-                <button
-                  onClick={() => setNavbarOpen(false)}
-                  className="text-[#1a1a1a] text-xl p-1"
-                  aria-label="Close menu"
-                >
-                  ✕
-                </button>
-              </div>
-              <nav className="flex flex-col gap-4">
-                {headerData.map((item, index) => (
-                  <a
-                    key={index}
-                    href={item.href}
-                    onClick={() => setNavbarOpen(false)}
-                    className="text-[#1a1a1a] hover:text-primary text-base font-medium transition-colors"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-                <div className="mt-4 flex flex-col gap-4">
-                  <button
-                    onClick={() => { setNavbarOpen(false); setSignInOpen(true); }}
-                    className="w-full bg-transparent border border-primary text-primary rounded-lg py-3 hover:bg-primary hover:text-white transition-all"
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => { setNavbarOpen(false); setSignUpOpen(true); }}
-                    className="w-full bg-primary text-white rounded-lg py-3 hover:bg-transparent hover:text-primary border border-primary font-medium transition-all"
-                  >
-                    Sign Up
-                  </button>
-                </div>
-              </nav>
-            </div>
           </div>
         )}
-      </header>
+      </div>
 
-
-    </>
+      {navbarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 -z-10 bg-ink-900/30"
+          onClick={() => setNavbarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+    </header>
   );
 };
 

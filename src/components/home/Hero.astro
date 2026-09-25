@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import { heroContent } from "@/data/landing";
+import StoreBadges from "@/components/ui/StoreBadges.astro";
+import heroImage from "@/assets/hero-banner-img.png";
+import { pressable } from "@/lib/ui";
+---
+
+<section class="relative pt-40 pb-20 sm:pt-48 sm:pb-28 overflow-hidden bg-hero-gradient" id="inicio">
+  <div class="container">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+      <div class="flex flex-col items-center lg:items-start gap-6 text-center lg:text-left">
+        <span
+          class="text-sm py-1.5 px-4 bg-white/10 rounded-pill border border-white/15 text-brand-300 font-semibold"
+        >
+          {heroContent.eyebrow}
+        </span>
+
+        <h1 class="text-display sm:text-money-hero font-extrabold text-ink-0 max-w-xl">
+          {heroContent.headline}
+        </h1>
+
+        <p class="text-ink-0/75 text-lg max-w-md">
+          {heroContent.subheadline}
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+          <a
+            href={heroContent.primaryCta.href}
+            class={`w-full sm:w-auto text-center bg-primary hover:bg-brand-400 text-primary-foreground rounded-pill font-semibold py-3.5 px-8 ${pressable}`}
+          >
+            {heroContent.primaryCta.label}
+          </a>
+          <a
+            href={heroContent.secondaryCta.href}
+            class={`w-full sm:w-auto text-center text-ink-0 border border-white/20 hover:border-white/40 rounded-pill font-semibold py-3.5 px-8 ${pressable}`}
+          >
+            {heroContent.secondaryCta.label}
+          </a>
+        </div>
+
+        <p class="text-ink-0/60 text-sm font-medium">{heroContent.availabilityNote}</p>
+
+        <div class="pt-2">
+          <StoreBadges tone="light" />
+        </div>
+      </div>
+
+      <div class="justify-self-center w-full max-w-sm">
+        <Image
+          src={heroImage}
+          alt={heroContent.image.alt}
+          width={584}
+          height={582}
+          class="w-full h-auto"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </div>
+</section>

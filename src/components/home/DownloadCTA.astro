@@ -1,0 +1,21 @@
+---
+import StoreBadges from "@/components/ui/StoreBadges.astro";
+import { downloadCtaContent } from "@/data/landing";
+---
+
+<section id="descargar" class="py-20 sm:py-28 bg-hero-gradient">
+  <div class="container flex flex-col items-center gap-6 text-center">
+    <h2 class="text-display font-extrabold text-ink-0 max-w-xl" data-reveal>
+      {downloadCtaContent.headline}
+    </h2>
+    <p class="text-ink-0/75 text-lg max-w-md" data-reveal>
+      {downloadCtaContent.subheadline}
+    </p>
+
+    <div data-reveal>
+      <StoreBadges tone="light" />
+    </div>
+
+    <p class="text-ink-0/60 text-sm font-medium">{downloadCtaContent.availabilityNote}</p>
+  </div>
+</section>

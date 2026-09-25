@@ -1,0 +1,22 @@
+# fiao
+
+> App para que un tendero lleve el control de lo que fía: quién le debe, cuánto, desde cuándo y qué ha abonado. Reemplaza el cuaderno del mostrador.
+
+fiao es una aplicación móvil para Android y iPhone pensada para tenderos y negocios de barrio en Colombia que venden fiado (a crédito) a sus clientes. Permite registrar clientes, anotar deudas (vales), registrar abonos y pagos, llevar varios negocios desde una sola cuenta, y enviar recordatorios de pago por WhatsApp. La interfaz está en español de Colombia y el dinero se maneja en pesos colombianos (COP).
+
+## Funcionalidades
+
+- Registro de clientes y control de saldo por cliente.
+- Registro de deudas (fiado) y pagos (abonos totales o parciales).
+- Manejo de varios negocios desde una misma cuenta.
+- Recordatorios de pago por WhatsApp.
+- Historial ordenado de movimientos por cliente.
+
+## A quién sirve
+
+Tenderos y dueños de negocios de barrio en Colombia que hoy fían a sus clientes usando un cuaderno de papel y quieren organizar esa información sin cambiar su forma de trabajar.
+
+## Enlaces
+
+- Sitio oficial: https://fiao.app
+- Preguntas frecuentes: https://fiao.app/#preguntas-frecuentes

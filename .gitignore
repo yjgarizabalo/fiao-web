@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# artefacto local de Salesforce CLI, no pertenece a este proyecto
+.sf/

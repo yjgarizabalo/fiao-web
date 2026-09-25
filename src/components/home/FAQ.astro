@@ -1,0 +1,29 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import FAQAccordion from "@/components/home/FAQAccordion";
+import { faqItems } from "@/data/landing";
+
+// El mismo arreglo que se ve en pantalla alimenta el FAQPage: nunca pueden desincronizarse.
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<section id="preguntas-frecuentes" class="py-20 sm:py-28 bg-ink-50">
+  <div class="container flex flex-col gap-14">
+    <SectionHeading eyebrow="Preguntas frecuentes" title="Lo que más nos preguntan los tenderos" />
+
+    <FAQAccordion items={faqItems} client:visible />
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} is:inline />

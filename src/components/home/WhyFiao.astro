@@ -1,0 +1,27 @@
+---
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { whyFiaoContent } from "@/data/landing";
+---
+
+<section id="por-que-fiao" class="py-20 sm:py-28">
+  <div class="container flex flex-col gap-14">
+    <SectionHeading eyebrow={whyFiaoContent.eyebrow} title={whyFiaoContent.headline} description={whyFiaoContent.intro} />
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
+      {
+        whyFiaoContent.comparisons.map((item) => (
+          <>
+            <div class="flex gap-3 p-6 rounded-2xl bg-ink-50 border border-border" data-reveal>
+              <span class="text-ink-400 font-bold shrink-0">El cuaderno</span>
+              <p class="text-ink-600">{item.cuaderno}</p>
+            </div>
+            <div class="flex gap-3 p-6 rounded-2xl bg-brand-50 border border-brand-100" data-reveal>
+              <span class="text-brand-600 font-bold shrink-0">Con fiao</span>
+              <p class="text-ink-800">{item.fiao}</p>
+            </div>
+          </>
+        ))
+      }
+    </div>
+  </div>
+</section>
