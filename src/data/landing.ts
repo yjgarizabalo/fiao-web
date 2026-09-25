@@ -92,30 +92,52 @@ export const trustStripItems: TrustStripItem[] = [
   },
 ];
 
+/**
+ * "¿Qué es fiao?" — respuesta directa de 40 a 75 palabras, pensada para que un
+ * asistente (Gemini, ChatGPT…) la pueda citar tal cual. Solo hechos del producto.
+ */
+export const whatIsContent = {
+  title: "¿Qué es fiao?",
+  answer:
+    "fiao es una app para Android y iPhone que reemplaza el cuaderno del fiado. Anotas a quién le fías y cuánto, registras los abonos cuando te pagan y la app te muestra al instante el saldo de cada cliente y el total que tienes por cobrar. Está pensada para tiendas de barrio y pequeños negocios en Colombia, en pesos y en español.",
+  points: [
+    { icon: "storefront-outline", text: "Para tenderos y pequeños negocios que fían" },
+    { icon: "phone-portrait-outline", text: "En el celular que ya tienes, Android o iPhone" },
+    { icon: "cash-outline", text: "Todo en pesos colombianos" },
+  ] satisfies { icon: IconName; text: string }[],
+};
+
 export interface Step {
   number: string;
   title: string;
   description: string;
 }
 
+export const howItWorksContent = {
+  eyebrow: "Cómo funciona",
+  title: "¿Cómo funciona fiao?",
+  description:
+    "En tres pasos: creas tu negocio, anotas lo que fías y registras los abonos. fiao hace las cuentas y te muestra quién te debe y cuánto.",
+};
+
 export const howItWorksSteps: Step[] = [
   {
-    number: "01",
-    title: "Registra tu negocio",
+    number: "1",
+    title: "Crea tu negocio",
     description:
-      "Crea tu cuenta y arma tu negocio en un par de minutos. Si manejas más de uno, los agregas todos y cambias entre ellos con un toque.",
+      "Te registras con tu correo o tu cédula y creas tu tienda en un minuto. ¿Tienes más de una? Las agregas todas y cambias entre ellas con un toque.",
   },
   {
-    number: "02",
+    number: "2",
     title: "Anota lo que fías",
     description:
-      "Cada vez que le fíes a un cliente, regístralo en el momento: nombre, monto y ya. Nada de vueltas mientras estás atendiendo.",
+      "Escoges al cliente, pones el monto y, si quieres, qué se llevó y para cuándo te paga. Listo, sin dejar de atender.",
   },
   {
-    number: "03",
-    title: "Cobra sin enredos",
+    number: "3",
+    title: "Registra los abonos",
     description:
-      "Cuando te paguen, registra el abono, completo o parcial, y fiao actualiza el saldo solo. Siempre sabes quién está al día.",
+      "Cuando te paguen, anotas el pago completo o una parte. fiao descuenta solo y te dice quién está al día.",
   },
 ];
 
@@ -125,73 +147,93 @@ export interface Feature {
   description: string;
 }
 
+export const featuresContent = {
+  eyebrow: "Funciones",
+  title: "¿Qué puedes hacer con fiao?",
+  description: "Lo que necesita una tienda para no perderle la pista al fiado. Ni más, ni menos.",
+};
+
+/** El primero se muestra grande, con la lista de clientes de la app. */
 export const featureHighlights: Feature[] = [
   {
     icon: "people-outline",
-    title: "Control de clientes y deudas",
+    title: "Todos tus clientes a la mano",
     description:
-      "Cada cliente con su historial completo: cuánto te debe, desde cuándo y qué te ha pagado hasta ahora.",
+      "Busca por nombre, cédula o teléfono y mira en un segundo quién te debe y quién está al día.",
+  },
+  {
+    icon: "calendar-outline",
+    title: "Fía con plazo, si quieres",
+    description: "Ponle fecha de pago: 8, 15 o 30 días. fiao te marca cuándo una deuda se vence.",
   },
   {
     icon: "cash-outline",
-    title: "Abonos parciales o pago total",
+    title: "Abonos como te paguen",
     description:
-      "Registra un abono a una deuda puntual o repártelo entre todo lo que un cliente te debe, como prefieras.",
-  },
-  {
-    icon: "storefront-outline",
-    title: "Varios negocios, una sola cuenta",
-    description:
-      "¿Tienes más de una tienda? Cámbiate entre negocios sin salir de la app ni mezclar las cuentas de cada uno.",
+      "Abona a una deuda puntual o al saldo total, y fiao lo reparte solo. En efectivo o por transferencia.",
   },
   {
     icon: "logo-whatsapp",
     title: "Recordatorios por WhatsApp",
-    description:
-      "Envíale a tu cliente un recordatorio de pago respetuoso, ya redactado, directo por WhatsApp desde la app.",
+    description: "Un mensaje amable, ya escrito, con el saldo exacto. Lo mandas a uno o a varios desde tu WhatsApp.",
+  },
+  {
+    icon: "storefront-outline",
+    title: "Varios negocios, una cuenta",
+    description: "Cada tienda con sus clientes y sus saldos, sin mezclar. Cambias de negocio con un toque.",
   },
   {
     icon: "receipt-outline",
-    title: "Historial de movimientos",
-    description:
-      "Cada fiado y cada abono queda ordenado por fecha, como el estado de cuenta de tu negocio, siempre a la mano.",
-  },
-  {
-    icon: "shield-checkmark-outline",
-    title: "Datos organizados por negocio",
-    description:
-      "La información de cada negocio y de sus clientes queda separada y protegida — como debe ser.",
+    title: "El extracto de cada cliente",
+    description: "Cada fiado y cada abono en orden, con su fecha. Si alguien pregunta cuánto debe, se lo muestras.",
   },
 ];
 
-export interface Comparison {
+/** Bloques alternados (el "cómo se siente" de tyba, adaptado al mostrador). */
+export const inStoreContent = {
+  eyebrow: "En el mostrador",
+  title: "Hecha para el afán de la tienda",
+  fiar: {
+    title: "Fiar te toma cinco segundos",
+    description:
+      "Tocas el monto, eliges el plazo y listo. El cliente se va con lo suyo y tú sigues atendiendo, sin buscar la página ni el lapicero.",
+    bullets: ["Montos rápidos: +$ 2.000, +$ 5.000, +$ 10.000…", "Plazo de 8, 15 o 30 días, o sin plazo", "Una nota para acordarte qué se llevó"],
+  },
+  cobrar: {
+    title: "Cobrar, sin pena",
+    description:
+      "fiao arma un recordatorio amable con el saldo exacto. Tú lo revisas y lo mandas desde tu WhatsApp, a uno o a varios clientes.",
+    bullets: ["Sale desde tu propio WhatsApp", "Con el nombre de tu negocio y el saldo al día", "Tú decides a quién y cuándo"],
+  },
+};
+
+/** El mensaje real que arma la app (fiao-mobil/src/core/utils/whatsapp.ts). */
+export const whatsappExample = {
+  business: "Tienda La Esquina",
+  client: "María",
+  balance: 18500,
+};
+
+export interface ComparisonRow {
+  topic: string;
   cuaderno: string;
   fiao: string;
 }
 
 export const whyFiaoContent = {
   eyebrow: "Por qué fiao",
-  headline: "Se acabó el cuaderno del mostrador",
+  title: "¿Por qué pasar del cuaderno a fiao?",
   intro:
-    "El cuaderno ha sido la forma de fiar de toda la vida en la tienda de barrio. Fiao no le quita el mérito: simplemente hace lo mismo, mejor.",
-  comparisons: [
-    {
-      cuaderno: "Se moja, se raya, se le arrancan hojas o se pierde.",
-      fiao: "Vive en tu celular. Siempre contigo, siempre completo.",
-    },
-    {
-      cuaderno: "Solo tú entiendes la letra, y a veces ni tú.",
-      fiao: "Números claros y saldo exacto, sin adivinar.",
-    },
-    {
-      cuaderno: "Si alguien pregunta cuánto debe, toca buscar página por página.",
-      fiao: "Un toque y ves el saldo de cualquier cliente al instante.",
-    },
-    {
-      cuaderno: "No hay forma de recordarle a nadie que pague.",
-      fiao: "Mándale un recordatorio por WhatsApp sin salir de la app.",
-    },
-  ] satisfies Comparison[],
+    "El cuaderno sirve, pero se moja, se pierde y toca sumarlo a mano. fiao lleva la misma cuenta de siempre, solo que sin errores y siempre a la mano.",
+  rows: [
+    { topic: "Si se moja o se pierde", cuaderno: "Se pierde todo lo anotado.", fiao: "Tus cuentas quedan guardadas en tu cuenta, no en el papel." },
+    { topic: "¿Cuánto me debe un cliente?", cuaderno: "Buscar página por página y sumar.", fiao: "Lo buscas y ves su saldo exacto." },
+    { topic: "¿Cuánto tengo por cobrar?", cuaderno: "Sumar a mano todo el cuaderno.", fiao: "Aparece de una en la pantalla de inicio." },
+    { topic: "Abonos a medias", cuaderno: "Tachones y restas al margen.", fiao: "Anotas el abono y el saldo se actualiza solo." },
+    { topic: "Deudas vencidas", cuaderno: "Te acuerdas si te acuerdas.", fiao: "Ves cuáles se vencieron y hace cuánto." },
+    { topic: "Recordarle al cliente", cuaderno: "Te toca decírselo en persona.", fiao: "Le mandas un WhatsApp ya escrito." },
+    { topic: "Más de un negocio", cuaderno: "Un cuaderno por tienda.", fiao: "Todos en la misma cuenta, sin mezclar." },
+  ] satisfies ComparisonRow[],
 };
 
 export interface FaqItem {

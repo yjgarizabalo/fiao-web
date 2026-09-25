@@ -1,0 +1,58 @@
+---
+/**
+ * ¿Qué es fiao? — la respuesta corta y citable (GEO) junto a un extracto real de la app,
+ * para que "llevar el fiado en el celular" se entienda de un vistazo.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import MovementRow from "@/components/ui/MovementRow.astro";
+import Avatar from "@/components/ui/Avatar.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { whatIsContent } from "@/data/landing";
+import { formatMoney } from "@/lib/format";
+---
+
+<section id="que-es-fiao" aria-labelledby="que-es-title" class="py-16 sm:py-24">
+  <div class="container grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+    <div class="flex flex-col gap-6" data-reveal>
+      <span class="eyebrow text-brand-text">En pocas palabras</span>
+      <h2 id="que-es-title" class="text-section font-extrabold">{whatIsContent.title}</h2>
+      <p class="text-lead text-text">{whatIsContent.answer}</p>
+      <ul class="flex flex-col gap-3 pt-2">
+        {
+          whatIsContent.points.map((point) => (
+            <li class="flex items-center gap-3 text-body-lg text-text">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                <Icon name={point.icon} size={17} />
+              </span>
+              {point.text}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- Extracto de ejemplo, tal como se ve en el detalle de un cliente. -->
+    <figure class="relative" data-reveal>
+      <div class="absolute -inset-x-3 -inset-y-6 -z-10 rounded-[40px] bg-bg sm:-inset-10" aria-hidden="true"></div>
+      <div class="mx-auto max-w-md rounded-3xl border border-border bg-surface p-5 shadow-lg sm:p-6">
+        <div class="flex items-center gap-3 border-b border-border pb-4">
+          <Avatar name="María Pérez" size="lg" status="debt" />
+          <div class="flex min-w-0 flex-1 flex-col">
+            <span class="text-title-3 font-semibold text-text">María Pérez</span>
+            <span class="text-caption text-text-muted">Saldo pendiente</span>
+          </div>
+          <div class="flex flex-col items-end gap-1">
+            <span class="tabular text-title-2 font-extrabold text-text-strong">{formatMoney(18500)}</span>
+            <Badge tone="warning" size="sm">2 deudas abiertas</Badge>
+          </div>
+        </div>
+        <div class="flex flex-col divide-y divide-border">
+          <MovementRow kind="debt" title="Pan, leche y arroz" date="Hoy, 8:12 a. m." amount={12500} />
+          <MovementRow kind="payment" title="Abono en efectivo" date="Ayer" amount={10000} />
+          <MovementRow kind="debt" title="Aceite y huevos" date="12 sep." amount={16000} status="Abonada" />
+        </div>
+      </div>
+      <figcaption class="mt-4 text-center text-caption text-text-muted">Así se ve la cuenta de un cliente en fiao.</figcaption>
+    </figure>
+  </div>
+</section>

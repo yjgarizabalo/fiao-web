@@ -2,6 +2,8 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/home/Hero.astro";
 import TrustStrip from "@/components/home/TrustStrip.astro";
+import WhatIs from "@/components/home/WhatIs.astro";
+import InStore from "@/components/home/InStore.astro";
 import HowItWorks from "@/components/home/HowItWorks.astro";
 import FeatureHighlights from "@/components/home/FeatureHighlights.astro";
 import WhyFiao from "@/components/home/WhyFiao.astro";
@@ -25,8 +27,10 @@ const { avif } = await getHeroImage();
   />
   <Hero />
   <TrustStrip />
+  <WhatIs />
   <HowItWorks />
   <FeatureHighlights />
+  <InStore />
   <WhyFiao />
   <FAQ />
   <DownloadCTA />
