@@ -1,15 +1,19 @@
 ---
 /**
- * Header fijo. Arriba del todo es transparente sobre el hero oscuro (logo blanco); al
- * bajar se vuelve vidrio blanco con borde fino, como la AppBar de la app. En páginas sin
- * hero oscuro (`solid`) arranca ya en blanco.
+ * Header con la estructura del nav de tyba.com.co: una cápsula flotante separada de los
+ * bordes (no una barra de lado a lado), con el logo y los enlaces a la izquierda y dos
+ * botones píldora a la derecha (uno suave y uno sólido).
  *
- * Antes era una isla de React (client:load): eso obligaba a bajar React completo solo
- * para abrir un menú. Ahora es HTML + un script de pocas líneas.
+ * Comportamiento:
+ *  - Arriba del todo la cápsula es transparente sobre el hero oscuro (logo blanco).
+ *  - Al bajar se vuelve la cápsula blanca con sombra, y se queda así.
+ *  - En páginas sin hero oscuro (`solid`) arranca ya blanca.
+ *
+ * Es HTML + un script mínimo (sin React): el menú móvil abre con aria-expanded, se
+ * cierra con Esc, al tocar fuera o al elegir un enlace.
  */
 import { Image } from "astro:assets";
-import { navItems, heroContent } from "@/data/landing";
-import Button from "@/components/ui/Button.astro";
+import { navItems, heroContent, faqContent } from "@/data/landing";
 import StoreBadges from "@/components/ui/StoreBadges.astro";
 import Icon from "@/components/ui/Icon.astro";
 import logoDark from "@/assets/logo-fiao.png";
@@ -22,7 +26,7 @@ export interface Props {
 const { solid = false } = Astro.props;
 ---
 
-<header id="site-header" class="site-header fixed inset-x-0 top-0 z-50" data-solid={solid ? "true" : undefined}>
+<header id="site-header" class="site-header fixed inset-x-0 top-0 z-50 pt-3 sm:pt-4 lg:pt-6" data-solid={solid ? "true" : undefined}>
   <a
     href="#contenido"
     class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-body focus:font-semibold focus:text-ink-900"
@@ -30,19 +34,19 @@ const { solid = false } = Astro.props;
     Saltar al contenido
   </a>
 
-  <div class="header-bar border-b border-transparent">
-    <div class="container flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+  <div class="container">
+    <div class="header-capsule flex h-16 items-center gap-4 rounded-2xl px-4 sm:px-6 lg:h-[72px] lg:gap-10">
       <a href="/" class="press relative flex h-11 shrink-0 items-center" aria-label="fiao, ir al inicio">
         <Image src={logoLight} alt="" height={28} densities={[1, 2]} class="logo-light h-7 w-auto" loading="eager" />
         <Image src={logoDark} alt="" height={28} densities={[1, 2]} class="logo-dark absolute left-0 h-7 w-auto" loading="eager" />
       </a>
 
       <nav aria-label="Principal" class="hidden lg:block">
-        <ul class="flex items-center gap-1">
+        <ul class="flex items-center gap-1 xl:gap-3">
           {
             navItems.map((item) => (
               <li>
-                <a href={item.href} class="nav-link press rounded-pill px-4 py-2 text-body font-medium">
+                <a href={item.href} class="nav-link inline-flex h-10 items-center rounded-pill px-3 text-[0.9375rem] font-medium">
                   {item.label}
                 </a>
               </li>
@@ -51,88 +55,117 @@ const { solid = false } = Astro.props;
         </ul>
       </nav>
 
-      <div class="flex items-center gap-2">
-        <Button size="sm" href={heroContent.primaryCta.href}>Descargar</Button>
+      <div class="ml-auto flex items-center gap-2 sm:gap-3">
+        <a
+          href={`mailto:${faqContent.supportEmail}`}
+          class="btn-soft press press-button hidden h-10 items-center rounded-pill px-4 text-caption font-bold sm:inline-flex"
+        >
+          Escríbenos
+        </a>
+        <a
+          href={heroContent.primaryCta.href}
+          class="press press-button inline-flex h-9 items-center rounded-pill bg-brand-500 px-4 text-caption font-bold text-ink-900 hover:bg-brand-400 active:bg-brand-600 sm:h-10 sm:px-5"
+        >
+          <span class="sm:hidden">Descargar</span>
+          <span class="hidden sm:inline">Descargar app</span>
+        </a>
         <button
           type="button"
-          class="menu-toggle press press-icon inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
+          class="menu-toggle press press-icon -mr-2 inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
           aria-controls="mobile-menu"
           aria-expanded="false"
           aria-label="Abrir menú"
         >
-          <Icon name="menu" size={24} class="icon-open" />
-          <Icon name="close" size={24} class="icon-close hidden" />
+          <!-- Hamburguesa de líneas desiguales, como la de tyba; se cruza en X al abrir. -->
+          <span class="burger" aria-hidden="true"><span></span><span></span><span></span></span>
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- Menú móvil: tarjeta flotante con el lenguaje de los bottom-sheets de la app. -->
-  <div id="mobile-menu" class="container lg:hidden" hidden>
-    <div class="mt-2 rounded-3xl border border-border bg-surface p-3 shadow-xl">
-      <nav aria-label="Principal móvil">
-        <ul class="flex flex-col">
-          {
-            navItems.map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class="press press-card flex items-center justify-between rounded-lg px-4 py-3.5 text-body-lg font-semibold text-text hover:bg-ink-50"
-                >
-                  {item.label}
-                  <Icon name="chevron-forward" size={18} class="text-text-subtle" />
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-      <div class="mt-2 border-t border-border px-4 pt-4 pb-2">
-        <StoreBadges />
+    <!-- Menú móvil: tarjeta flotante bajo la cápsula, como los bottom-sheets de la app. -->
+    <div id="mobile-menu" class="lg:hidden" hidden>
+      <div class="mt-2 rounded-2xl border border-border bg-surface p-3 shadow-xl">
+        <nav aria-label="Principal móvil">
+          <ul class="flex flex-col">
+            {
+              navItems.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="press press-card flex items-center justify-between rounded-lg px-4 py-3.5 text-body-lg font-semibold text-text hover:bg-ink-50"
+                  >
+                    {item.label}
+                    <Icon name="chevron-forward" size={18} class="text-text-subtle" />
+                  </a>
+                </li>
+              ))
+            }
+            <li>
+              <a
+                href={`mailto:${faqContent.supportEmail}`}
+                class="press press-card flex items-center justify-between rounded-lg px-4 py-3.5 text-body-lg font-semibold text-text hover:bg-ink-50"
+              >
+                Escríbenos
+                <Icon name="mail-outline" size={18} class="text-text-subtle" />
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="mt-2 border-t border-border px-4 pt-4 pb-2">
+          <StoreBadges />
+        </div>
       </div>
     </div>
   </div>
 </header>
 
 <style>
-  .site-header .header-bar {
+  /* ── Cápsula ─────────────────────────────────────────────────────────────── */
+  .header-capsule {
+    border: 1px solid transparent;
     transition:
       background-color var(--duration-normal) var(--ease-snappy),
       border-color var(--duration-normal) var(--ease-snappy),
       box-shadow var(--duration-normal) var(--ease-snappy);
   }
 
-  /* Estado transparente (sobre el hero oscuro). */
+  /* Estado transparente (arriba, sobre el hero oscuro). */
   .site-header {
     --focus-ring: var(--color-brand-300);
-  }
-  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) {
-    --focus-ring: var(--color-brand-600);
   }
   .logo-dark {
     opacity: 0;
   }
   .nav-link {
-    color: rgb(255 255 255 / 0.8);
+    color: rgb(255 255 255 / 0.85);
+    transition:
+      color var(--duration-fast) var(--ease-snappy),
+      background-color var(--duration-fast) var(--ease-snappy);
   }
   .nav-link:hover {
     color: #fff;
     background: rgb(255 255 255 / 0.08);
   }
+  .btn-soft {
+    color: #fff;
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18);
+  }
+  .btn-soft:hover {
+    background: rgb(255 255 255 / 0.16);
+  }
   .menu-toggle {
     color: #fff;
   }
 
-  /* Estado sólido: al bajar, con el menú abierto o en páginas sin hero. */
-  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .header-bar {
-    background: rgb(255 255 255 / 0.88);
-    border-color: var(--color-border);
-    box-shadow: var(--shadow-xs);
-    backdrop-filter: saturate(1.6) blur(14px);
-    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  /* Estado blanco: al bajar, con el menú abierto o en páginas sin hero. */
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) {
+    --focus-ring: var(--color-brand-600);
   }
-  .site-header[data-open="true"] .header-bar {
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .header-capsule {
     background: #fff;
+    border-color: var(--color-border);
+    box-shadow: 0 6px 24px rgb(11 15 20 / 0.08), 0 1px 2px rgb(11 15 20 / 0.04);
   }
   .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .logo-dark {
     opacity: 1;
@@ -141,11 +174,19 @@ const { solid = false } = Astro.props;
     opacity: 0;
   }
   .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .nav-link {
-    color: var(--color-text-muted);
+    color: var(--color-text);
   }
   .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .nav-link:hover {
     color: var(--color-text-strong);
     background: var(--color-ink-50);
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .btn-soft {
+    color: var(--color-brand-text);
+    background: var(--color-brand-soft);
+    box-shadow: none;
+  }
+  .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .btn-soft:hover {
+    background: var(--color-brand-100);
   }
   .site-header:is([data-scrolled="true"], [data-open="true"], [data-solid="true"]) .menu-toggle {
     color: var(--color-text-strong);
@@ -155,6 +196,51 @@ const { solid = false } = Astro.props;
   .logo-dark {
     transition: opacity var(--duration-normal) var(--ease-snappy);
   }
+
+  /* ── Hamburguesa ─────────────────────────────────────────────────────────── */
+  .burger {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 16px;
+  }
+  .burger span {
+    position: absolute;
+    right: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform var(--duration-normal) var(--ease-snappy),
+      opacity var(--duration-fast) var(--ease-snappy),
+      width var(--duration-normal) var(--ease-snappy),
+      top var(--duration-normal) var(--ease-snappy);
+  }
+  .burger span:nth-child(1) {
+    top: 0;
+    width: 22px;
+  }
+  .burger span:nth-child(2) {
+    top: 7px;
+    width: 15px;
+  }
+  .burger span:nth-child(3) {
+    top: 14px;
+    width: 19px;
+  }
+  .site-header[data-open="true"] .burger span:nth-child(1) {
+    top: 7px;
+    width: 22px;
+    transform: rotate(45deg);
+  }
+  .site-header[data-open="true"] .burger span:nth-child(2) {
+    opacity: 0;
+  }
+  .site-header[data-open="true"] .burger span:nth-child(3) {
+    top: 7px;
+    width: 22px;
+    transform: rotate(-45deg);
+  }
 </style>
 
 <script>
@@ -163,7 +249,7 @@ const { solid = false } = Astro.props;
   const menu = document.getElementById("mobile-menu");
 
   if (header) {
-    // Header sólido al bajar. rAF evita trabajo por cada evento de scroll.
+    // Cápsula blanca al bajar. rAF evita trabajo por cada evento de scroll.
     let ticking = false;
     const update = () => {
       header.dataset.scrolled = String(window.scrollY > 16);
@@ -188,8 +274,6 @@ const { solid = false } = Astro.props;
       header.dataset.open = String(open);
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
-      toggle.querySelector(".icon-open")?.classList.toggle("hidden", open);
-      toggle.querySelector(".icon-close")?.classList.toggle("hidden", !open);
     };
 
     toggle.addEventListener("click", () => setOpen(menu.hidden));
