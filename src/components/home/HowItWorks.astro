@@ -1,0 +1,81 @@
+---
+/**
+ * Cómo funciona — tres pasos, cada uno con la pieza de la app que le corresponde
+ * (selector de negocio, montos rápidos, registro del pago). El HowTo del JSON-LD se
+ * genera desde los mismos pasos en src/lib/structured-data.ts.
+ */
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { howItWorksContent, howItWorksSteps } from "@/data/landing";
+---
+
+<section id="como-funciona" aria-labelledby="como-funciona-title" class="defer-render bg-bg py-16 sm:py-24">
+  <div class="container flex flex-col gap-12 sm:gap-16">
+    <SectionHeading
+      id="como-funciona-title"
+      eyebrow={howItWorksContent.eyebrow}
+      title={howItWorksContent.title}
+      description={howItWorksContent.description}
+    />
+
+    <ol class="grid gap-5 md:grid-cols-3">
+      {
+        howItWorksSteps.map((step, index) => (
+          <li class="flex flex-col overflow-hidden rounded-2xl border border-border bg-surface" data-reveal>
+            <div class="flex h-48 items-center justify-center bg-surface-muted px-6" aria-hidden="true">
+              {index === 0 && (
+                <div class="flex w-full max-w-[290px] flex-col gap-2">
+                  <div class="flex items-center gap-3 rounded-lg border border-brand-100 bg-surface px-3.5 py-3 shadow-sm">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-[11px] bg-brand-50 text-brand-600">
+                      <Icon name="storefront-outline" size={18} />
+                    </span>
+                    <span class="flex-1 truncate text-body font-semibold">Tienda La Esquina</span>
+                    <Badge tone="brand" size="sm">Activo</Badge>
+                  </div>
+                  <div class="flex items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-3">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-[11px] bg-ink-100 text-ink-500">
+                      <Icon name="storefront-outline" size={18} />
+                    </span>
+                    <span class="flex-1 text-body font-semibold text-text-muted">Miscelánea Don Pedro</span>
+                  </div>
+                </div>
+              )}
+              {index === 1 && (
+                <div class="flex w-full max-w-[260px] flex-col items-center gap-3">
+                  <span class="text-caption font-semibold text-text-muted">¿Cuánto le vas a fiar?</span>
+                  <span class="tabular text-money-hero font-extrabold text-text-strong">$ 18.500</span>
+                  <div class="flex flex-wrap justify-center gap-1.5">
+                    {["+$2.000", "+$5.000", "+$10.000"].map((chip) => (
+                      <span class="rounded-pill border border-border bg-surface px-3 py-1.5 text-caption font-semibold text-text">{chip}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {index === 2 && (
+                <div class="flex w-full max-w-[270px] flex-col items-center gap-3">
+                  <div class="grid w-full grid-cols-3 rounded-pill bg-ink-100 p-1 text-center text-caption font-semibold">
+                    <span class="rounded-pill bg-surface py-2 text-brand-text shadow-xs">Pagó todo</span>
+                    <span class="py-2 text-ink-600">La mitad</span>
+                    <span class="py-2 text-ink-600">Otro</span>
+                  </div>
+                  <div class="inline-flex items-center gap-2 rounded-lg bg-ink-900 px-3.5 py-2.5 text-caption font-semibold text-white shadow-md">
+                    <Icon name="checkmark-circle" size={16} class="text-brand-300" />
+                    Abono de $ 18.500 registrado
+                  </div>
+                </div>
+              )}
+            </div>
+            <div class="flex flex-col gap-2 p-6">
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-500 text-body font-extrabold text-ink-900">
+                {step.number}
+              </span>
+              <h3 class="mt-2 text-title-2 font-bold">{step.title}</h3>
+              <p class="text-body-lg text-text-muted">{step.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

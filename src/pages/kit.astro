@@ -1,0 +1,136 @@
+---
+/**
+ * /kit — vitrina interna del design system de fiao-web. Sirve para revisar que cada
+ * primitivo se vea como en la app antes de usarlo en la landing. No se indexa y está
+ * excluida del sitemap (astro.config.mjs).
+ */
+import Layout from "@/layouts/Layout.astro";
+import Button from "@/components/ui/Button.astro";
+import Badge from "@/components/ui/Badge.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import Avatar from "@/components/ui/Avatar.astro";
+import Card from "@/components/ui/Card.astro";
+import BalanceCard from "@/components/ui/BalanceCard.astro";
+import DebtorRow from "@/components/ui/DebtorRow.astro";
+import ToastCard from "@/components/ui/ToastCard.astro";
+
+const swatches = [
+  ["brand-500", "#00B26B"],
+  ["brand-700", "#007647"],
+  ["brand-50", "#E8FAF1"],
+  ["ink-900", "#0B0F14"],
+  ["ink-800", "#1D262F"],
+  ["ink-500", "#63707E"],
+  ["ink-100", "#E8ECF0"],
+  ["ink-50", "#F4F6F8"],
+  ["danger-500", "#E14848"],
+  ["warning-500", "#F5A524"],
+  ["info-500", "#3B82F6"],
+];
+---
+
+<Layout title="Design system" noindex solidHeader>
+  <div class="container flex flex-col gap-14 pt-32 pb-24">
+    <header class="flex flex-col gap-2">
+      <span class="eyebrow text-brand-text">Fase 2 · Fundamentos</span>
+      <h1 class="text-section font-extrabold">Design system de fiao</h1>
+      <p class="text-lead text-text-muted max-w-2xl">Los mismos tokens y piezas de la app, listos para la web.</p>
+    </header>
+
+    <section aria-labelledby="kit-color" class="flex flex-col gap-4">
+      <h2 id="kit-color" class="text-title-2 font-bold">Color</h2>
+      <div class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-11 gap-3">
+        {
+          swatches.map(([name, hex]) => (
+            <div class="flex flex-col gap-1.5">
+              <span class="h-14 rounded-lg border border-border" style={`background:${hex}`} />
+              <span class="text-caption font-semibold">{name}</span>
+              <span class="text-caption text-text-muted tabular">{hex}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section aria-labelledby="kit-type" class="flex flex-col gap-3">
+      <h2 id="kit-type" class="text-title-2 font-bold">Tipografía · Inter</h2>
+      <p class="text-headline font-extrabold">Tus vales, siempre al día</p>
+      <p class="text-section font-extrabold">¿Cómo funciona fiao?</p>
+      <p class="text-display font-extrabold">display 34 · Hola, Carlos</p>
+      <p class="text-title-1 font-bold">title1 28 · Te deben</p>
+      <p class="text-title-3 font-semibold">title3 18 · Movimientos</p>
+      <p class="text-body-lg">bodyLg 17 · Registra a la primera persona a la que le fías.</p>
+      <p class="text-body text-text-muted">body 15 · Cada negocio lleva sus propios vales.</p>
+      <p class="text-caption text-text-muted">caption 13 · 300 123 4567</p>
+      <p class="text-money-hero font-extrabold tabular">$ 120.000</p>
+    </section>
+
+    <section aria-labelledby="kit-buttons" class="flex flex-col gap-4">
+      <h2 id="kit-buttons" class="text-title-2 font-bold">Botones</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <Button size="lg" icon="cash-outline">Registrar pago</Button>
+        <Button variant="secondary" size="lg" icon="add-circle-outline">Fiar</Button>
+        <Button variant="ghost">Ver todos</Button>
+        <Button size="sm">Descargar</Button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 rounded-3xl bg-hero-gradient p-6">
+        <Button size="lg">Descargar fiao</Button>
+        <Button variant="glass" size="lg" iconRight="chevron-forward">Ver cómo funciona</Button>
+        <Button variant="inverse">Entrar</Button>
+      </div>
+    </section>
+
+    <section aria-labelledby="kit-badges" class="flex flex-col gap-4">
+      <h2 id="kit-badges" class="text-title-2 font-bold">Badges e IconBubble</h2>
+      <div class="flex flex-wrap items-center gap-2">
+        <Badge tone="success" icon="checkmark-circle">Al día</Badge>
+        <Badge tone="warning">2 deudas abiertas</Badge>
+        <Badge tone="danger" icon="time-outline">Venció hace 3 días</Badge>
+        <Badge tone="info">Nuevo</Badge>
+        <Badge tone="neutral">Anulada</Badge>
+        <Badge tone="brand">Activo</Badge>
+        <Badge tone="success" size="sm">Pagada</Badge>
+        <Badge tone="warning" size="sm">Abonada</Badge>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <IconBubble icon="person-add-outline" size={40} />
+        <IconBubble icon="people-outline" />
+        <IconBubble icon="storefront-outline" size={56} />
+        <IconBubble icon="arrow-up" tone="danger" />
+        <IconBubble icon="time-outline" tone="warning" />
+        <IconBubble icon="shield-checkmark-outline" tone="info" />
+        <IconBubble icon="receipt-outline" tone="neutral" />
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <Avatar name="Emanuel Jesús" size="sm" />
+        <Avatar name="María José Pérez" status="clear" />
+        <Avatar name="Andrés Iniesta" size="lg" status="debt" />
+        <Avatar name="Carlos" size="xl" status="overdue" />
+      </div>
+    </section>
+
+    <section aria-labelledby="kit-cards" class="flex flex-col gap-4">
+      <h2 id="kit-cards" class="text-title-2 font-bold">Piezas de la app</h2>
+      <div class="grid gap-6 lg:grid-cols-2">
+        <BalanceCard
+          greeting="Hola, Carlos"
+          businessName="Tienda La Esquina"
+          amount={120000}
+          owingCount={2}
+          clearCount={5}
+          summary="Ejemplo: Tienda La Esquina tiene 120.000 pesos por cobrar."
+        />
+        <div class="flex flex-col gap-3">
+          <DebtorRow name="Emanuel Jesús" phone="300 123 4589" balance={70000} />
+          <DebtorRow name="Andrés Iniesta" phone="300 123 4567" balance={50000} overdue />
+          <DebtorRow name="María José Pérez" phone="301 555 0101" balance={0} />
+          <ToastCard>Abono de $ 20.000 registrado</ToastCard>
+          <Card interactive elevation="raised" padding="lg" href="#kit-cards">
+            <p class="text-title-3 font-semibold">Card interactiva</p>
+            <p class="text-body text-text-muted">Presiona: escala 0.985 como en la app.</p>
+          </Card>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

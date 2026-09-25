@@ -1,0 +1,44 @@
+---
+/**
+ * Card — superficie de fiao-mobil (src/ui/Card.tsx): blanco, borde de 1 px, radio 20 y
+ * padding 16 por defecto. Tres elevaciones como en la app (flat / raised / floating).
+ * `interactive` agrega el press-scale 0.985 de las tarjetas y el lift en hover.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+export interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: "div" | "article" | "li" | "a";
+  href?: string;
+  elevation?: "flat" | "raised" | "floating";
+  inverse?: boolean;
+  interactive?: boolean;
+  padding?: "none" | "md" | "lg";
+  class?: string;
+}
+
+const {
+  as = "div",
+  href,
+  elevation = "flat",
+  inverse = false,
+  interactive = false,
+  padding = "md",
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const Tag = href ? "a" : as;
+
+const classes = [
+  "block border rounded-xl",
+  inverse ? "bg-ink-900 border-white/15 text-white" : "bg-surface border-border",
+  { flat: "", raised: "shadow-sm", floating: "shadow-md" }[elevation],
+  { none: "", md: "p-4", lg: "p-6 sm:p-7" }[padding],
+  interactive ? "press press-card lift" : "",
+  className,
+].join(" ");
+---
+
+<Tag class={classes} href={href} {...rest}>
+  <slot />
+</Tag>

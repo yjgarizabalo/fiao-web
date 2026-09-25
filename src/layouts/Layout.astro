@@ -1,44 +1,106 @@
 ---
+/**
+ * Layout base: metadatos completos (title, description, canonical, Open Graph, Twitter),
+ * íconos, precarga de la fuente y el JSON-LD en un solo @graph
+ * (src/lib/structured-data.ts). La home agrega los nodos de la app, FAQ y HowTo con
+ * `homeSchema`.
+ */
 import "@/styles/global.css";
-import Header from "@/components/layout/Header";
-import ScrollToTop from "@/components/layout/ScrollToTop";
+import { getImage } from "astro:assets";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import ScrollToTop from "@/components/layout/ScrollToTop.astro";
+import FloatingActions from "@/components/layout/FloatingActions.astro";
+import { site, absoluteUrl } from "@/lib/seo";
+import { buildStructuredData } from "@/lib/structured-data";
+import appIcon from "@/assets/fiao-app-icon.png";
+import squareLogo from "@/assets/fiao-logo-cuadrado.png";
 
 export interface Props {
+  /** Título de la página. Sin él se usa el de la home. */
   title?: string;
   description?: string;
+  /** Para páginas que no deben indexarse, como 404. */
+  noindex?: boolean;
+  /** Header blanco desde el inicio (páginas sin hero oscuro). */
+  solidHeader?: boolean;
+  /** Agrega MobileApplication, FAQPage y HowTo al JSON-LD. */
+  homeSchema?: boolean;
 }
 
-const { title = "fiao", description = "Organiza si microcredito" } =
-  Astro.props;
+const { title, description = site.description, noindex = false, solidHeader = false, homeSchema = false } = Astro.props;
+
+const pageTitle = title ? `${title} · ${site.name}` : site.homeTitle;
+const canonicalUrl = absoluteUrl(Astro.url.pathname);
+const ogImageUrl = absoluteUrl(site.ogImage.path);
+
+const [touchIcon, logo] = await Promise.all([
+  getImage({ src: appIcon, width: 180, height: 180, format: "png" }),
+  getImage({ src: squareLogo, width: 512, height: 512, format: "png" }),
+]);
+
+const structuredData = buildStructuredData({ logoUrl: absoluteUrl(logo.src), home: homeSchema });
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es-CO">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-		<meta name="description" content={description} />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-      rel="stylesheet"
-    />
 
-    <title>{title}</title>
+    <!-- Fuente principal: se precarga para que el titular del hero no espere a la CSS. -->
+    <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
 
-    <style>
-      body {
-        font-family: "DM Sans", sans-serif;
-      }
-    </style>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1"} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" title="Resumen de fiao para asistentes de IA" href="/llms.txt" />
+
+    <meta name="application-name" content={site.name} />
+    <meta name="apple-mobile-web-app-title" content={site.name} />
+    <meta name="theme-color" content={site.themeColor} />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href={touchIcon.src} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content={String(site.ogImage.width)} />
+    <meta property="og:image:height" content={String(site.ogImage.height)} />
+    <meta property="og:image:alt" content={site.ogImage.alt} />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={site.ogImage.alt} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+
+    <slot name="head" />
+
+    <script>
+      import "@/scripts/reveal";
+    </script>
   </head>
-  <body class="bg-background text-foreground">
-    <Header client:load />
-    <slot />
-    <ScrollToTop client:load />
+  <body>
+    <Header solid={solidHeader} />
+    <main id="contenido" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer />
+    <FloatingActions />
+    <ScrollToTop />
   </body>
 </html>

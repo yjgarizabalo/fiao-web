@@ -1,0 +1,27 @@
+---
+/**
+ * Encabezado de sección: eyebrow + H2 + bajada. El H2 lleva `id` para que la sección
+ * lo referencie con aria-labelledby. Los títulos son preguntas reales cuando se puede
+ * (GEO): así un asistente encuentra la pregunta y la respuesta juntas.
+ */
+export interface Props {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  align?: "left" | "center";
+  tone?: "light" | "dark";
+  class?: string;
+}
+
+const { id, eyebrow, title, description, align = "center", tone = "light", class: className = "" } = Astro.props;
+
+const alignClass = align === "center" ? "items-center text-center mx-auto" : "items-start text-left";
+const dark = tone === "dark";
+---
+
+<div class={`flex max-w-2xl flex-col gap-4 ${alignClass} ${className}`} data-reveal>
+  {eyebrow && <span class={`eyebrow ${dark ? "text-brand-300" : "text-brand-text"}`}>{eyebrow}</span>}
+  <h2 id={id} class={`text-section font-extrabold ${dark ? "!text-white" : ""}`}>{title}</h2>
+  {description && <p class={`text-lead ${dark ? "text-white/75" : "text-text-muted"}`}>{description}</p>}
+</div>

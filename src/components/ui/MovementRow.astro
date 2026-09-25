@@ -1,0 +1,39 @@
+---
+/**
+ * MovementRow — una línea del extracto de un cliente en fiao-mobil: círculo con flecha
+ * (↑ rojo = deuda, ↓ verde = abono), concepto, fecha y monto con signo.
+ */
+import Icon from "./Icon.astro";
+import Badge from "./Badge.astro";
+import { formatMoney } from "@/lib/format";
+
+export interface Props {
+  kind: "debt" | "payment";
+  title: string;
+  date: string;
+  amount: number;
+  status?: "Abonada" | "Pagada";
+  class?: string;
+}
+
+const { kind, title, date, amount, status, class: className = "" } = Astro.props;
+const isDebt = kind === "debt";
+---
+
+<div class={`flex items-center gap-3 py-3 ${className}`}>
+  <span
+    class={`inline-flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full ${isDebt ? "bg-danger-50 text-danger-600" : "bg-brand-50 text-brand-600"}`}
+  >
+    <Icon name={isDebt ? "arrow-up" : "arrow-down"} size={17} />
+  </span>
+  <div class="flex min-w-0 flex-1 flex-col">
+    <span class="truncate text-body font-semibold text-text">{title}</span>
+    <span class="text-caption text-text-muted">{date}</span>
+  </div>
+  <div class="flex flex-col items-end gap-1">
+    <span class={`tabular text-money font-bold ${isDebt ? "text-danger-600" : "text-brand-text"}`}>
+      {isDebt ? "+" : "−"}{formatMoney(amount)}
+    </span>
+    {status && <Badge size="sm" tone={status === "Pagada" ? "success" : "warning"}>{status}</Badge>}
+  </div>
+</div>

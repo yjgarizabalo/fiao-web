@@ -1,0 +1,71 @@
+---
+/**
+ * Button — misma anatomía que fiao-mobil (src/ui/Button.tsx): alturas 38/48/56, radio
+ * 12/16/16, etiqueta en 700 y press-scale 0.98. Con `href` se renderiza como enlace
+ * (la mayoría de los CTA de la landing llevan a un ancla o a una tienda).
+ *
+ * Variantes: las de la app (primary, secondary, ghost, inverse) + `glass`, que es el
+ * botón secundario sobre fondos oscuros (la píldora translúcida del BusinessSwitcher).
+ */
+import Icon from "./Icon.astro";
+import type { IconName } from "@/lib/icons";
+import type { HTMLAttributes } from "astro/types";
+
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "inverse" | "glass";
+
+export interface Props extends Omit<HTMLAttributes<"a">, "class" | "type"> {
+  variant?: ButtonVariant;
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  icon?: IconName;
+  iconRight?: IconName;
+  block?: boolean;
+  type?: "button" | "submit";
+  class?: string;
+}
+
+const {
+  variant = "primary",
+  size = "md",
+  href,
+  icon,
+  iconRight,
+  block = false,
+  type = "button",
+  class: className = "",
+  ...rest
+} = Astro.props;
+
+const sizeClass = {
+  sm: "h-[38px] px-4 rounded-md gap-1 text-caption",
+  md: "h-12 px-5 rounded-lg gap-2 text-body",
+  lg: "h-14 px-6 rounded-lg gap-2 text-body-lg",
+}[size];
+
+const iconSize = { sm: 16, md: 18, lg: 20 }[size];
+
+// Etiqueta ink-900 sobre verde: 6.9:1 (AA). La app usa blanco (2.8:1).
+const variantClass: Record<ButtonVariant, string> = {
+  primary: "bg-brand-500 text-ink-900 shadow-sm hover:bg-brand-400 active:bg-brand-600",
+  secondary: "bg-surface text-text border border-border-strong hover:bg-ink-25 active:bg-ink-100",
+  ghost: "bg-transparent text-text-muted hover:bg-ink-50 active:bg-ink-100",
+  inverse: "bg-white text-ink-900 hover:bg-brand-50 active:bg-brand-100",
+  glass: "bg-white/10 text-white ring-1 ring-inset ring-white/20 hover:bg-white/15 active:bg-white/20",
+};
+
+const classes = [
+  "press press-button inline-flex items-center justify-center font-bold whitespace-nowrap select-none",
+  sizeClass,
+  variantClass[variant],
+  block ? "w-full" : "",
+  className,
+].join(" ");
+
+const Tag = href ? "a" : "button";
+---
+
+<Tag class={classes} href={href} type={href ? undefined : type} {...rest}>
+  {icon && <Icon name={icon} size={iconSize} />}
+  <span><slot /></span>
+  {iconRight && <Icon name={iconRight} size={iconSize} />}
+</Tag>

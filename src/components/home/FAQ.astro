@@ -1,0 +1,102 @@
+---
+/**
+ * Preguntas frecuentes con <details>/<summary> nativos: se abren con teclado y lector de
+ * pantalla sin una línea de JavaScript (antes era una isla de React). `name="faq"` hace
+ * que se abra una a la vez, como un acordeón, en los navegadores que lo soportan.
+ *
+ * Cada pregunta es un H3 real y la respuesta está en el HTML aunque esté cerrada: los
+ * buscadores y asistentes la leen completa. El FAQPage del JSON-LD sale de los mismos
+ * datos (src/lib/structured-data.ts), así que nunca se desincronizan.
+ */
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Icon from "@/components/ui/Icon.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import { faqContent, faqItems } from "@/data/landing";
+---
+
+<section id="preguntas-frecuentes" aria-labelledby="faq-title" class="defer-render bg-bg py-16 sm:py-24">
+  <div class="container grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <div class="flex flex-col gap-8 lg:sticky lg:top-28 lg:self-start">
+      <SectionHeading
+        id="faq-title"
+        align="left"
+        eyebrow={faqContent.eyebrow}
+        title={faqContent.title}
+        description={faqContent.description}
+      />
+      <div class="flex items-start gap-4 rounded-2xl border border-border bg-surface p-5" data-reveal>
+        <IconBubble icon="mail-outline" />
+        <div class="flex flex-col gap-1">
+          <p class="text-title-3 font-semibold text-text-strong">¿Tienes otra pregunta?</p>
+          <p class="text-body text-text-muted">
+            Escríbenos a
+            <a href={`mailto:${faqContent.supportEmail}`} class="font-semibold text-brand-text underline decoration-brand-200 underline-offset-4 hover:decoration-brand-text">
+              {faqContent.supportEmail}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      {
+        faqItems.map((item, index) => (
+          <details name="faq" class="faq-item group rounded-2xl border border-border bg-surface" open={index === 0} data-reveal>
+            <summary class="press press-card flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-5 sm:px-6">
+              <h3 class="text-title-3 font-semibold">{item.question}</h3>
+              <span class="faq-icon inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                <Icon name="add" size={18} />
+              </span>
+            </summary>
+            <div class="px-5 pb-5 sm:px-6">
+              <p class="text-body-lg text-text-muted">{item.answer}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-icon {
+    transition:
+      transform var(--duration-normal) var(--ease-snappy),
+      background-color var(--duration-fast) var(--ease-snappy);
+  }
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+    background: var(--color-brand-500);
+    color: var(--color-ink-900);
+  }
+  .faq-item[open] {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+  /* El press no debe encoger el acordeón completo, solo dar respuesta al toque. */
+  .faq-item summary:active {
+    transform: none;
+    opacity: 0.85;
+  }
+  /* Apertura animada donde el navegador lo soporta (Chrome 131+); si no, abre directo. */
+  @supports selector(::details-content) {
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition:
+        block-size var(--duration-normal) var(--ease-snappy),
+        content-visibility var(--duration-normal) allow-discrete;
+    }
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+  }
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+  }
+</style>

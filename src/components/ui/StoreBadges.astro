@@ -1,0 +1,62 @@
+---
+/**
+ * Botones de App Store y Google Play. Siguen la forma de los badges oficiales (negro,
+ * logo de la tienda, dos líneas con el texto que usa cada tienda en español) pero se
+ * dibujan en HTML: nítidos a cualquier tamaño, sin imágenes extra.
+ *
+ * TODO(datos): mientras no existan las fichas en las tiendas (storeLinks en null), los
+ * botones llevan a la sección #descargar. Al publicar, basta con poner las URL reales en
+ * src/data/landing.ts.
+ */
+import Icon from "./Icon.astro";
+import { storeLinks, storeNames } from "@/data/landing";
+
+export interface Props {
+  /** Fondo sobre el que se ponen: en oscuro llevan borde claro para no perderse. */
+  on?: "light" | "dark";
+  /** `responsive`: md en móvil (caben los dos en una fila), lg desde 640 px. */
+  size?: "md" | "lg" | "responsive";
+  class?: string;
+}
+
+const { on = "light", size = "md", class: className = "" } = Astro.props;
+
+const stores = [
+  { key: "ios", icon: "logo-apple", top: "Descárgalo en el", href: storeLinks.ios },
+  { key: "android", icon: "logo-google-playstore", top: "Disponible en", href: storeLinks.android },
+] as const;
+
+const ring = on === "dark" ? "ring-1 ring-inset ring-white/25 hover:ring-white/45" : "ring-1 ring-inset ring-ink-900 hover:bg-ink-800";
+const sizeClass = {
+  md: "h-12 pl-3.5 pr-4 gap-2.5",
+  lg: "h-14 pl-4 pr-5 gap-3",
+  responsive: "h-12 pl-3.5 pr-4 gap-2.5 sm:h-14 sm:pl-4 sm:pr-5 sm:gap-3",
+}[size];
+const nameClass = { md: "text-[17px]", lg: "text-[19px]", responsive: "text-[17px] sm:text-[19px]" }[size];
+const iconSize = size === "md" ? 22 : 24;
+---
+
+<ul class={`flex flex-wrap items-center gap-3 ${className}`} aria-label="Descarga fiao">
+  {
+    stores.map((store) => {
+      const isLive = Boolean(store.href);
+      return (
+        <li>
+          <a
+            href={store.href ?? "/#descargar"}
+            class={`press press-button inline-flex items-center rounded-md bg-ink-900 text-white ${sizeClass} ${ring}`}
+            {...(isLive ? { target: "_blank", rel: "noopener" } : {})}
+          >
+            <Icon name={store.icon} size={iconSize} />
+            <span class="flex flex-col text-left leading-none">
+              <span class="text-[10.5px] font-medium opacity-80">{store.top}</span>
+              <span class={`${nameClass} mt-0.5 font-semibold tracking-tight`}>
+                {storeNames[store.key]}
+              </span>
+            </span>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

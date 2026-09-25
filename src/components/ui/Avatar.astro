@@ -1,0 +1,38 @@
+---
+/**
+ * Avatar — círculo con iniciales sobre el color que la app le asigna al nombre
+ * (hash estable, src/lib/format.ts) y punto de estado opcional:
+ * al día (verde), debe (ámbar), vencido (rojo). Tamaños de la app: 32/44/56/72.
+ */
+import { avatarColor, initials } from "@/lib/format";
+
+export interface Props {
+  name: string;
+  size?: "sm" | "md" | "lg" | "xl";
+  status?: "clear" | "debt" | "overdue";
+  class?: string;
+}
+
+const { name, size = "md", status, class: className = "" } = Astro.props;
+
+const box = { sm: 32, md: 44, lg: 56, xl: 72 }[size];
+const textClass = { sm: "text-caption", md: "text-body", lg: "text-title-3", xl: "text-title-2" }[size];
+const dot = Math.max(10, Math.round(box * 0.26));
+const dotColor = { clear: "#00B26B", debt: "#F5A524", overdue: "#E14848" };
+---
+
+<span
+  class={`relative inline-flex shrink-0 items-center justify-center rounded-full font-extrabold text-white ${textClass} ${className}`}
+  style={`width:${box}px;height:${box}px;background:${avatarColor(name)}`}
+  aria-hidden="true"
+>
+  {initials(name)}
+  {
+    status && (
+      <span
+        class="absolute rounded-full"
+        style={`width:${dot}px;height:${dot}px;right:-1px;bottom:-1px;background:${dotColor[status]};box-shadow:0 0 0 ${dot > 12 ? 2.5 : 2}px #fff`}
+      />
+    )
+  }
+</span>

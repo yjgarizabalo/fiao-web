@@ -1,0 +1,28 @@
+---
+/**
+ * ToastCard — el aviso de confirmación de fiao-mobil (src/ui/Toast.tsx) como pieza
+ * estática: fondo ink-900, radio 16, sombra lg, ícono por tono y texto bodyStrong.
+ * En la landing muestra el "momento" de la app (una deuda o un abono registrado).
+ */
+import Icon from "./Icon.astro";
+
+export interface Props {
+  tone?: "success" | "info" | "error";
+  class?: string;
+}
+
+const { tone = "success", class: className = "" } = Astro.props;
+
+const toneIcon = {
+  success: { name: "checkmark-circle", color: "text-brand-300" },
+  info: { name: "help-circle-outline", color: "text-info-100" },
+  error: { name: "alert-circle-outline", color: "text-danger-300" },
+} as const;
+
+const { name, color } = toneIcon[tone];
+---
+
+<div class={`inline-flex items-center gap-2.5 rounded-lg bg-ink-900 px-4 py-3.5 text-body font-semibold text-white shadow-lg ${className}`}>
+  <Icon name={name} size={20} class={color} />
+  <span><slot /></span>
+</div>

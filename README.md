@@ -1,46 +1,40 @@
-# Astro Starter Kit: Basics
+# fiao-web
 
-```sh
-npm create astro@latest -- --template basics
+Landing de **fiao**, la app para llevar el fiado de la tienda desde el celular (Android y iPhone).
+Astro + Tailwind v4, sin JavaScript de framework en el navegador.
+
+## Comandos
+
+```bash
+npm install
+npm run dev       # http://localhost:4321
+npm run check     # astro check (tipos)
+npm run build     # sitio estático en dist/
+npm run preview   # sirve dist/
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Dónde está cada cosa
 
-## 🚀 Project Structure
+| Qué | Dónde |
+| --- | --- |
+| Todo el texto de la página (y de FAQ, JSON-LD y llms.txt) | `src/data/landing.ts` |
+| Dominio, título, descripción, imagen OG | `src/lib/seo.ts` (+ `site` en `astro.config.mjs`) |
+| JSON-LD (`@graph`) | `src/lib/structured-data.ts` |
+| Tokens del design system (calcados de fiao-mobil) | `src/styles/global.css` |
+| Primitivos de UI (Button, Badge, IconBubble, BalanceCard…) | `src/components/ui/` — vitrina en `/kit` |
+| Secciones de la home | `src/components/home/` |
+| Íconos (Ionicons, el mismo set de la app) | `src/lib/icons.ts` |
+| `llms.txt` (se genera en build) | `src/pages/llms.txt.ts` |
 
-Inside of your Astro project, you'll see the following folders and files:
+## Pendientes que necesitan datos
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Busca `TODO(datos)` en el código:
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Dominio real de producción (`src/lib/seo.ts` y `astro.config.mjs`).
+- URL de App Store y Google Play (`storeLinks` en `src/data/landing.ts`): al ponerlas se activan
+  en todos los botones y en el JSON-LD.
+- Confirmar el buzón `soporte@fiao.app`.
+- Páginas de Términos y Privacidad (`legalLinks` en `Footer.astro`) y redes sociales.
+- Precio, para la pregunta "¿Cuánto cuesta fiao?".
+- Número de WhatsApp de fiao (`whatsappContact` en `src/data/landing.ts`; hoy es un marcador).
+- QR real para el modal "Descarga la app" (`downloadModalContent.qrImage`; hoy muestra uno de ejemplo).

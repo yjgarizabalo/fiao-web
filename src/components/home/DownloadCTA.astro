@@ -1,0 +1,52 @@
+---
+/**
+ * CTA final (#descargar) — el banner de descarga de tyba: bloque oscuro con el degradado
+ * de la app, badges de las tiendas y "Disponible para Android y iPhone". A la derecha,
+ * el héroe de Inicio de la app reconstruido en HTML (sin otra imagen que descargar).
+ * Es el destino de todos los botones "Descargar" mientras no haya enlaces de tienda.
+ */
+import StoreBadges from "@/components/ui/StoreBadges.astro";
+import BalanceCard from "@/components/ui/BalanceCard.astro";
+import DebtorRow from "@/components/ui/DebtorRow.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { downloadCtaContent } from "@/data/landing";
+---
+
+<section id="descargar" aria-labelledby="descargar-title" class="defer-render py-16 sm:py-24">
+  <div class="container">
+    <div class="relative isolate overflow-hidden rounded-[32px] bg-hero-gradient-wide px-6 py-12 sm:px-12 sm:py-16 lg:rounded-[40px] lg:px-16">
+      <div
+        class="pointer-events-none absolute -z-10 -right-24 -bottom-24 h-[420px] w-[420px] rounded-full bg-brand-500/25 blur-[110px]"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="flex flex-col items-start gap-6" data-reveal>
+          <span class="eyebrow text-brand-300">{downloadCtaContent.eyebrow}</span>
+          <h2 id="descargar-title" class="max-w-[16ch] text-section font-extrabold !text-white">
+            {downloadCtaContent.headline}
+          </h2>
+          <p class="max-w-md text-lead text-white/75">{downloadCtaContent.subheadline}</p>
+          <StoreBadges on="dark" size="responsive" class="pt-2" />
+          <p class="inline-flex items-center gap-2 text-body font-medium text-white/75">
+            <Icon name="checkmark-circle" size={18} class="text-brand-300" />
+            {downloadCtaContent.availabilityNote}
+          </p>
+        </div>
+
+        <div class="relative mx-auto mb-10 w-full max-w-[360px] sm:mb-6" aria-hidden="true" data-reveal>
+          <div class="rotate-[-3deg] rounded-[28px] bg-white/5 p-2 ring-1 ring-white/15 shadow-xl">
+            <BalanceCard businessName="Tienda La Esquina" amount={120000} owingCount={2} clearCount={5} class="ring-1 ring-white/10" />
+          </div>
+          <DebtorRow
+            name="Luis Gómez"
+            phone="300 123 4589"
+            balance={70000}
+            class="absolute -bottom-12 left-3 right-3 rotate-[2deg] shadow-lg sm:-bottom-8 sm:-right-8 sm:left-auto sm:w-[290px]"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

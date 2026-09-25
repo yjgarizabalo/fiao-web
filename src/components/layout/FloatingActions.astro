@@ -1,0 +1,271 @@
+---
+/**
+ * Acciones flotantes (esquina inferior derecha):
+ *  1. "Descarga la app": píldora verde como el Fab de fiao-mobil (src/ui/Fab.tsx). Aparece
+ *     al pasar el hero y abre el modal con el QR y los badges de las tiendas.
+ *  2. WhatsApp: botón circular que abre un chat con fiao con un mensaje ya escrito.
+ *
+ * El modal es un <dialog> nativo: atrapa el foco, se cierra con Esc, con la X o tocando
+ * el fondo, y devuelve el foco al botón que lo abrió. En escritorio es la tarjeta del
+ * Dialog de la app (radio 32); en móvil sube como bottom-sheet, igual que Sheet.
+ * Cualquier elemento con [data-open-download] también lo abre.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import StoreBadges from "@/components/ui/StoreBadges.astro";
+import { downloadModalContent as modal, whatsappContact } from "@/data/landing";
+import { placeholderQrPath, finderOrigins } from "@/lib/qr-placeholder";
+
+const whatsappUrl = `https://wa.me/${whatsappContact.number}?text=${encodeURIComponent(whatsappContact.message)}`;
+const qr = placeholderQrPath();
+---
+
+<div class="floating-actions fixed right-4 bottom-4 z-40 flex flex-col items-end gap-3 sm:right-6 sm:bottom-6">
+  <button
+    type="button"
+    id="download-fab"
+    class="download-fab press inline-flex h-12 items-center gap-2 rounded-pill bg-brand-500 pr-4 pl-3.5 text-body font-bold sm:h-14 sm:pr-5 sm:pl-4 text-ink-900 shadow-lg hover:bg-brand-400"
+    data-open-download
+    aria-haspopup="dialog"
+    aria-controls="download-modal"
+    tabindex="-1"
+  >
+    <Icon name="phone-portrait-outline" size={22} />
+    {modal.fabLabel}
+  </button>
+
+  <a
+    href={whatsappUrl}
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-fab press inline-flex h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-full text-white shadow-lg"
+    aria-label={whatsappContact.label}
+    title={whatsappContact.label}
+  >
+    <Icon name="logo-whatsapp" size={28} />
+  </a>
+</div>
+
+<dialog id="download-modal" class="download-modal" aria-labelledby="download-modal-title" aria-describedby="download-modal-desc">
+  <div class="relative flex flex-col items-center gap-5 px-6 pt-4 pb-7 text-center sm:px-8 sm:pt-8">
+    <!-- Manija del bottom-sheet (solo móvil), como Sheet en la app. -->
+    <span class="h-1 w-10 rounded-full bg-ink-200 sm:hidden" aria-hidden="true"></span>
+
+    <form method="dialog" class="absolute top-3 right-3 sm:top-4 sm:right-4">
+      <button
+        type="submit"
+        class="press press-icon inline-flex h-10 w-10 items-center justify-center rounded-full bg-ink-100 text-text-muted hover:bg-ink-200"
+        aria-label="Cerrar"
+      >
+        <Icon name="close" size={18} />
+      </button>
+    </form>
+
+    <IconBubble icon="phone-portrait-outline" size={56} class="mt-2 sm:mt-0" />
+
+    <div class="flex flex-col gap-2">
+      <h2 id="download-modal-title" class="text-title-2 font-extrabold">{modal.title}</h2>
+      <p id="download-modal-desc" class="text-body-lg text-text-muted">
+        <span class="hidden sm:inline">{modal.description}</span>
+        <span class="sm:hidden">{modal.mobileDescription}</span>
+      </p>
+    </div>
+
+    <!-- QR: en móvil no tiene sentido (ya estás en el celular), ahí van directo las tiendas. -->
+    <figure class="hidden flex-col items-center gap-3 sm:flex">
+      <div class="relative rounded-2xl border border-border bg-white p-4 shadow-sm">
+        {
+          modal.qrImage ? (
+            <img src={modal.qrImage} alt="Código QR para descargar fiao" width="200" height="200" class="h-[200px] w-[200px]" />
+          ) : (
+            <svg
+              viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
+              width="200"
+              height="200"
+              role="img"
+              aria-label="Código QR de ejemplo (todavía no lleva a ninguna parte)"
+              shape-rendering="crispEdges"
+            >
+              <path d={qr.path} fill="#0B0F14" />
+              {finderOrigins.map(([x, y]) => (
+                <g>
+                  <rect x={x + 0.5} y={y + 0.5} width="6" height="6" rx="1.6" fill="none" stroke="#0B0F14" stroke-width="1" />
+                  <rect x={x + 2} y={y + 2} width="3" height="3" rx="0.8" fill="#0B0F14" />
+                </g>
+              ))}
+            </svg>
+          )
+        }
+        <!-- Asterisco de fiao en el centro del código. -->
+        <span class="absolute inset-0 m-auto inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-white" aria-hidden="true">
+          <span class="inline-flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink-900 text-brand-500">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+              <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4" />
+            </svg>
+          </span>
+        </span>
+      </div>
+      {
+        !modal.qrImage && (
+          <figcaption class="inline-flex items-center gap-1.5 rounded-pill bg-warning-50 px-3 py-1 text-caption font-semibold text-warning-800">
+            <Icon name="alert-circle-outline" size={14} />
+            {modal.qrExampleNote}
+          </figcaption>
+        )
+      }
+    </figure>
+
+    <div class="flex w-full items-center gap-3 text-caption text-text-muted">
+      <span class="h-px flex-1 bg-border"></span>
+      <span class="hidden sm:inline">{modal.storesDivider}</span>
+      <span class="sm:hidden">Elige tu tienda</span>
+      <span class="h-px flex-1 bg-border"></span>
+    </div>
+
+    <StoreBadges class="justify-center" />
+
+    <p class="inline-flex items-center gap-2 text-body text-text-muted">
+      <Icon name="checkmark-circle" size={16} class="text-brand-500" />
+      {modal.availabilityNote}
+    </p>
+  </div>
+</dialog>
+
+<style>
+  /* ── Botones flotantes ───────────────────────────────────────────────────── */
+  .floating-actions {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+  .whatsapp-fab {
+    /* Verde de WhatsApp oscurecido lo justo para que el ícono blanco pase 3:1 (AA). */
+    background: #1da851;
+  }
+  .whatsapp-fab:hover {
+    background: #179446;
+  }
+  .download-fab {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+    pointer-events: none;
+    transition:
+      opacity var(--duration-normal) var(--ease-snappy),
+      transform var(--duration-normal) var(--ease-snappy),
+      background-color var(--duration-fast) var(--ease-snappy);
+  }
+  .download-fab[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .download-fab[data-visible="true"]:active {
+    transform: scale(0.94); /* activeScale del Fab en la app */
+  }
+
+  /* ── Modal ───────────────────────────────────────────────────────────────── */
+  .download-modal {
+    width: min(420px, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-xl);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .download-modal::backdrop {
+    background: rgb(11 15 20 / 0.6); /* overlay de la app */
+    backdrop-filter: blur(4px);
+  }
+  :global(html:has(.download-modal[open])) {
+    overflow: hidden;
+  }
+
+  /* Entrada: escala desde 0.94 como Dialog en la app; en móvil sube como Sheet. */
+  .download-modal[open] {
+    animation: modal-in var(--duration-normal) var(--ease-snappy);
+  }
+  .download-modal[open]::backdrop {
+    animation: backdrop-in var(--duration-normal) ease-out;
+  }
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (width < 40rem) {
+    .download-modal {
+      width: 100%;
+      max-width: 100%;
+      margin: auto 0 0;
+      border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .download-modal[open] {
+      animation: sheet-in var(--duration-slow) var(--ease-soft);
+    }
+    @keyframes sheet-in {
+      from {
+        transform: translateY(100%);
+      }
+    }
+  }
+</style>
+
+<script>
+  const modal = document.getElementById("download-modal") as HTMLDialogElement | null;
+  const fab = document.getElementById("download-fab");
+
+  if (modal) {
+    let opener: HTMLElement | null = null;
+
+    document.addEventListener("click", (event) => {
+      const trigger = (event.target as HTMLElement).closest<HTMLElement>("[data-open-download]");
+      if (!trigger) return;
+      event.preventDefault();
+      opener = trigger;
+      modal.showModal();
+    });
+
+    // Tocar el fondo (fuera de la tarjeta) cierra el modal.
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) modal.close();
+    });
+    // Elegir una tienda cierra el modal (mientras no haya URL, lleva a #descargar).
+    modal.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) modal.close();
+    });
+    modal.addEventListener("close", () => opener?.focus({ preventScroll: true }));
+  }
+
+  if (fab) {
+    // El Fab aparece cuando el hero (y sus badges) ya salieron de pantalla.
+    let ticking = false;
+    const update = () => {
+      const visible = window.scrollY > 600;
+      fab.dataset.visible = String(visible);
+      fab.tabIndex = visible ? 0 : -1;
+      ticking = false;
+    };
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>

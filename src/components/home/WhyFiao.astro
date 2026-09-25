@@ -1,0 +1,148 @@
+---
+/**
+ * Por qué fiao — comparativa cuaderno vs fiao como <table> real (con caption y
+ * encabezados de fila), para que lectores de pantalla y buscadores la entiendan como
+ * tabla. En móvil cada fila se apila como tarjeta, sin scroll horizontal.
+ */
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { whyFiaoContent } from "@/data/landing";
+---
+
+<section id="por-que-fiao" aria-labelledby="por-que-title" class="defer-render py-16 sm:py-24">
+  <div class="container flex flex-col gap-12 sm:gap-16">
+    <SectionHeading
+      id="por-que-title"
+      eyebrow={whyFiaoContent.eyebrow}
+      title={whyFiaoContent.title}
+      description={whyFiaoContent.intro}
+    />
+
+    <div class="mx-auto w-full max-w-4xl" data-reveal>
+      <table class="compare w-full border-separate border-spacing-0 text-left">
+        <caption class="sr-only">Comparación entre llevar el fiado en cuaderno y llevarlo en fiao</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="w-[30%]"><span class="sr-only">Situación</span></th>
+            <th scope="col">
+              <span class="inline-flex items-center gap-2 text-title-3 font-bold text-text-muted">
+                <Icon name="book-outline" size={20} /> Cuaderno
+              </span>
+            </th>
+            <th scope="col" class="col-fiao">
+              <span class="inline-flex items-center gap-2 text-title-3 font-extrabold text-brand-text">
+                <Icon name="checkmark-circle" size={20} class="text-brand-500" /> fiao
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            whyFiaoContent.rows.map((row) => (
+              <tr>
+                <th scope="row" class="text-body-lg font-semibold text-text-strong">
+                  {row.topic}
+                </th>
+                <td class="text-body-lg text-text-muted">
+                  <span class="cell-label" aria-hidden="true">Cuaderno</span>
+                  <span class="inline-flex items-start gap-2">
+                    <Icon name="close-circle-outline" size={20} class="mt-0.5 text-ink-400" />
+                    {row.cuaderno}
+                  </span>
+                </td>
+                <td class="col-fiao text-body-lg text-text">
+                  <span class="cell-label" aria-hidden="true">fiao</span>
+                  <span class="inline-flex items-start gap-2">
+                    <Icon name="checkmark-circle" size={20} class="mt-0.5 text-brand-500" />
+                    {row.fiao}
+                  </span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .compare th,
+  .compare td {
+    padding: 1.125rem 1.25rem;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .compare thead th {
+    border-bottom-width: 0;
+    padding-bottom: 1rem;
+  }
+  /* Columna de fiao resaltada, como una tarjeta de la app. */
+  .compare .col-fiao {
+    background: var(--color-brand-soft);
+    border-bottom-color: var(--color-brand-100);
+  }
+  .compare thead .col-fiao {
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  }
+  .compare tbody tr:last-child .col-fiao {
+    border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+  }
+  .compare tbody tr:last-child th,
+  .compare tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .cell-label {
+    display: none;
+  }
+
+  /* Móvil: cada fila es una tarjeta con el tema arriba y las dos respuestas debajo. */
+  @media (width < 48rem) {
+    .compare thead {
+      display: none;
+    }
+    .compare,
+    .compare tbody,
+    .compare tr,
+    .compare th,
+    .compare td {
+      display: block;
+      width: 100%;
+    }
+    .compare tbody {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .compare tr {
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      background: var(--color-surface);
+    }
+    .compare th,
+    .compare td,
+    .compare tbody tr:last-child th,
+    .compare tbody tr:last-child td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .compare .col-fiao,
+    .compare tbody tr:last-child .col-fiao {
+      border-radius: 0;
+      border-bottom: 0;
+    }
+    .cell-label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .col-fiao .cell-label {
+      color: var(--color-brand-text);
+    }
+  }
+</style>

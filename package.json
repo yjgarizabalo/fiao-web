@@ -1,5 +1,5 @@
 {
-  "name": "fiao-landing",
+  "name": "fiao-web",
   "type": "module",
   "version": "0.1.0",
   "private": true,
@@ -13,29 +13,23 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.7",
     "@astrojs/react": "^4.0.0",
-    "@astrojs/vercel": "^10.0.2",
-    "@iconify/react": "^5.2.1",
+    "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.1.0",
     "astro": "^6.0.7",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.562.0",
-    "motion": "^12.38.0",
     "react": "^19.0.0",
-    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
-    "react-intersection-observer": "^9.16.0",
-    "tailwind-merge": "^3.0.0",
     "tailwindcss": "^4.1.0"
   },
   "devDependencies": {
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "playwright": "^1.55.0",
     "typescript": "^5.9.3"
   }
 }

@@ -1,176 +1,385 @@
+/**
+ * Tokens de fiao-web — traducción a CSS de fiao-mobil (src/theme/tokens.ts + index.ts).
+ *
+ * Regla de la app que se conserva aquí: los componentes consumen ROLES (text, surface,
+ * border…), la escala cruda (brand-500, ink-800) es para casos puntuales. Si falta un
+ * token, se agrega aquí, no en el componente.
+ *
+ * Diferencias deliberadas con la app, todas por contraste WCAG AA en la web:
+ *  - El botón primario usa etiqueta ink-900 sobre brand-500 (6.9:1). La app usa blanco,
+ *    que da 2.8:1 — pasable en un botón nativo, no en una web que queremos accesible.
+ *  - El texto verde sobre fondo claro usa brand-700 (5.7:1), no brand-600 (3.9:1).
+ *  - El texto ámbar sobre warning-50 usa warning-800 (6.4:1), que la app no tiene.
+ *  - textSubtle (ink-400, 3.2:1) solo se usa en texto grande o decorativo.
+ */
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
+/* ── Fuente propia ─────────────────────────────────────────────────────────── */
+/* Inter Variable (OFL, ver /fonts/OFL-inter.txt), subconjunto latino: cubre á é í ó ú ñ
+   ¿ ¡ y el signo −. Alojada en el sitio y precargada desde Layout.astro. Es la fuente
+   más cercana a SF (iPhone) y Roboto (Android), que es lo que muestra la app. */
+@font-face {
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("/fonts/inter-latin-var.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* Fallback con métricas ajustadas a Inter: mientras la fuente llega, el texto ocupa casi
+   el mismo espacio y el cambio no mueve el layout (CLS). */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
 
 @theme {
-  /* Spacing */
-  --spacing-8xl:  75rem;
-  --spacing-25:   35.625rem;
-  --spacing-29:   28rem;
-  --spacing-45:   45rem;
-  --spacing-50:   50rem;
-  --spacing-51:   54.375rem;
-  --spacing-85:   21rem;
-  --spacing-94:   22.5rem;
-  --spacing-120:  120rem;
-  --spacing-6_25: 6.25rem;
-  --spacing-8_5:  8.5rem;
-  --spacing-3_75: 3.75rem;
+  --font-sans: "Inter Variable", "Inter Fallback", system-ui, -apple-system, "Segoe UI",
+    Roboto, sans-serif;
 
-  /* Max width */
-  --width-8xl: 75rem;
+  /* ── Escala cruda (idéntica a fiao-mobil) ─────────────────────────────── */
+  --color-brand-50: #e8faf1;
+  --color-brand-100: #c6f2de;
+  --color-brand-200: #8fe6bf;
+  --color-brand-300: #4fd69c;
+  --color-brand-400: #17c480;
+  --color-brand-500: #00b26b;
+  --color-brand-600: #009459;
+  --color-brand-700: #007647;
+  --color-brand-800: #005634;
 
-  /* Border radius */
-  --radius-sm:  calc(var(--radius) - 4px);
-  --radius-md:  calc(var(--radius) - 2px);
-  --radius-lg:  var(--radius);
-  --radius-xl:  calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --color-ink-0: #ffffff;
+  --color-ink-25: #fafbfc;
+  --color-ink-50: #f4f6f8;
+  --color-ink-100: #e8ecf0;
+  --color-ink-200: #d3dae1;
+  --color-ink-300: #b0bac5;
+  --color-ink-400: #8592a0;
+  --color-ink-500: #63707e;
+  --color-ink-600: #495663;
+  --color-ink-700: #333e4a;
+  --color-ink-800: #1d262f;
+  --color-ink-900: #0b0f14;
 
-  /* Colors — mapped from CSS vars */
-  --color-background:          var(--background);
-  --color-foreground:          var(--foreground);
-  --color-card:                var(--card);
-  --color-card-foreground:     var(--card-foreground);
-  --color-popover:             var(--popover);
-  --color-popover-foreground:  var(--popover-foreground);
-  --color-primary:             var(--primary);
-  --color-primary-foreground:  var(--primary-foreground);
-  --color-secondary:           var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted:               var(--muted);
-  --color-muted-foreground:    var(--muted-foreground);
-  --color-accent:              var(--accent);
-  --color-accent-foreground:   var(--accent-foreground);
-  --color-destructive:         var(--destructive);
-  --color-border:              var(--border);
-  --color-input:               var(--input);
-  --color-ring:                var(--ring);
-  --color-chart-1:             var(--chart-1);
-  --color-chart-2:             var(--chart-2);
-  --color-chart-3:             var(--chart-3);
-  --color-chart-4:             var(--chart-4);
-  --color-chart-5:             var(--chart-5);
-  --color-tealGreen:           var(--tealGreen);
-  --color-charcoalGray:        var(--charcoalGray);
+  --color-danger-50: #feecec;
+  --color-danger-100: #fbd5d5;
+  --color-danger-300: #f08c8c;
+  --color-danger-500: #e14848;
+  --color-danger-600: #c42e2e;
+  --color-danger-700: #9e2020;
 
-  /* Blur */
-  --blur-220: 220px;
-  --blur-400: 400px;
+  --color-warning-50: #fff6e5;
+  --color-warning-100: #ffe7bf;
+  --color-warning-500: #f5a524;
+  --color-warning-600: #d18a0f;
+  --color-warning-700: #a66c05;
+  --color-warning-800: #7d5100; /* solo web, ver cabecera */
 
-  /* Shadows */
-  --shadow-cause-shadow: 0px 4px 17px 0px #00000008;
+  --color-info-50: #eaf2ff;
+  --color-info-100: #d0e1ff;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
 
-  /* Background images */
-  --bg-start: url('/images/work/bg-start.svg');
-  --bg-perk:  url('/images/perks/perk-bg.png');
+  /* ── Roles (src/theme/index.ts) ───────────────────────────────────────── */
+  --color-bg: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #fafbfc;
+  --color-surface-sunken: #e8ecf0;
+  --color-surface-inverse: #0b0f14;
+  --color-surface-inverse-soft: #1d262f;
+
+  --color-text: #1d262f;
+  --color-text-strong: #0b0f14;
+  --color-text-muted: #63707e;
+  --color-text-subtle: #8592a0;
+
+  --color-border: #e8ecf0;
+  --color-border-strong: #d3dae1;
+
+  --color-brand: #00b26b;
+  --color-brand-strong: #009459;
+  --color-brand-text: #007647;
+  --color-brand-soft: #e8faf1;
+
+  /* ── Radios (idénticos a la app) ──────────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-pill: 999px;
+
+  /* ── Sombras: mismos valores que theme.shadow, tintadas en ink-900 ────── */
+  --shadow-xs: 0 1px 4px rgb(11 15 20 / 0.04);
+  --shadow-sm: 0 2px 8px rgb(11 15 20 / 0.06);
+  --shadow-md: 0 6px 16px rgb(11 15 20 / 0.09);
+  --shadow-lg: 0 12px 28px rgb(11 15 20 / 0.14);
+  --shadow-xl: 0 18px 40px rgb(11 15 20 / 0.2);
+
+  /* ── Tipografía: escala de la app (px exactos) ────────────────────────── */
+  --text-overline: 0.6875rem; /* 11 */
+  --text-overline--line-height: 0.875rem;
+  --text-overline--letter-spacing: 0.05em;
+  --text-overline--font-weight: 700;
+  --text-caption: 0.8125rem; /* 13 */
+  --text-caption--line-height: 1.125rem;
+  --text-body: 0.9375rem; /* 15 */
+  --text-body--line-height: 1.3125rem;
+  --text-body-lg: 1.0625rem; /* 17 */
+  --text-body-lg--line-height: 1.5rem;
+  --text-title-3: 1.125rem; /* 18 */
+  --text-title-3--line-height: 1.5rem;
+  --text-title-3--letter-spacing: -0.011em;
+  --text-title-2: 1.375rem; /* 22 */
+  --text-title-2--line-height: 1.75rem;
+  --text-title-2--letter-spacing: -0.018em;
+  --text-title-1: 1.75rem; /* 28 */
+  --text-title-1--line-height: 2.125rem;
+  --text-title-1--letter-spacing: -0.021em;
+  --text-display: 2.125rem; /* 34 */
+  --text-display--line-height: 2.5rem;
+  --text-display--letter-spacing: -0.0235em;
+  --text-money: 1.0625rem; /* 17 */
+  --text-money--line-height: 1.375rem;
+  --text-money--letter-spacing: -0.012em;
+  --text-money-hero: 2.5rem; /* 40 */
+  --text-money-hero--line-height: 2.875rem;
+  --text-money-hero--letter-spacing: -0.03em;
+
+  /* Solo web: una landing necesita titulares más grandes que una pantalla de celular.
+     Fluidos con clamp() para no depender de breakpoints. */
+  --text-headline: clamp(2.5rem, 1.55rem + 3.8vw, 4.5rem);
+  --text-headline--line-height: 1.04;
+  --text-headline--letter-spacing: -0.035em;
+  --text-section: clamp(1.875rem, 1.4rem + 1.9vw, 3rem);
+  --text-section--line-height: 1.1;
+  --text-section--letter-spacing: -0.028em;
+  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --text-lead--line-height: 1.55;
+
+  /* ── Movimiento: springs de la app aproximados como curvas CSS ────────── */
+  --ease-snappy: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+  --default-transition-duration: 160ms;
+  --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --max-width-8xl: 75rem;
 }
 
 :root {
-  --radius: 0.625rem;
+  /* theme.duration de la app */
+  --duration-instant: 90ms;
+  --duration-fast: 160ms;
+  --duration-normal: 240ms;
+  --duration-slow: 380ms;
 
-  --background:          #ffffff;
-  --foreground:          #1a1a1a;
-  --card:                #f9fafb;
-  --card-foreground:     #1a1a1a;
-  --popover:             #ffffff;
-  --popover-foreground:  #1a1a1a;
-  --primary:             #34C759;
-  --primary-foreground:  #ffffff;
-  --secondary:           #e5f9eb;
-  --secondary-foreground: #1a1a1a;
-  --muted:               #f3f4f6;
-  --muted-foreground:    #6b7280;
-  --accent:              #f0fdf4;
-  --accent-foreground:   #1a1a1a;
-  --destructive:         #ef4444;
-  --border:              rgb(0 0 0 / 0.1);
-  --input:               #e5e7eb;
-  --ring:                #34C759;
-  --chart-1:             #f97316;
-  --chart-2:             #22d3ee;
-  --chart-3:             #475569;
-  --chart-4:             #eab308;
-  --chart-5:             #f59e0b;
-  --tealGreen:           #477e70;
-  --charcoalGray:        #666c78;
-}
+  /* gradient.hero de la app: vertical, tres paradas parejas. */
+  --gradient-hero: linear-gradient(180deg, #0b0f14 0%, #0f2a20 50%, #005634 100%);
+  /* Variante diagonal para bloques anchos en escritorio (CTA final). */
+  --gradient-hero-wide: linear-gradient(135deg, #0b0f14 0%, #0f2a20 55%, #005634 100%);
 
-.dark {
-  --background:          #ffffff;
-  --foreground:          #1a1a1a;
-  --card:                #f9fafb;
-  --card-foreground:     #1a1a1a;
-  --popover:             #ffffff;
-  --popover-foreground:  #1a1a1a;
-  --primary:             #34C759;
-  --primary-foreground:  #ffffff;
-  --secondary:           #e5f9eb;
-  --secondary-foreground: #1a1a1a;
-  --muted:               #f3f4f6;
-  --muted-foreground:    #6b7280;
-  --accent:              #f0fdf4;
-  --accent-foreground:   #1a1a1a;
-  --destructive:         #ef4444;
-  --border:              rgb(0 0 0 / 0.1);
-  --input:               #e5e7eb;
-  --ring:                #34C759;
-  --chart-1:             #6366f1;
-  --chart-2:             #4ade80;
-  --chart-3:             #f59e0b;
-  --chart-4:             #a855f7;
-  --chart-5:             #f87171;
-  --tealGreen:           #477e70;
-  --charcoalGray:        #666c78;
+  color-scheme: light;
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* El header es fijo: los anclajes (#como-funciona…) no deben quedar tapados. */
+    scroll-padding-top: 6rem;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface text-text font-sans text-body-lg;
+  }
+
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+
+  ::selection {
+    background: var(--color-brand-100);
+    color: var(--color-ink-900);
+  }
+
+  /* Foco visible y consistente en todo el sitio (navegación por teclado). */
+  :focus-visible {
+    /* 3.9:1 sobre blanco. En fondos oscuros (.on-dark) cambia a brand-300: 4.9 a 10.5:1
+       en todo el degradado hero, donde brand-600 bajaría a 2.3:1. */
+    outline: 2px solid var(--focus-ring, var(--color-brand-600));
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--color-text-strong);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
-@layer utilities {
-  .container {
-    @apply w-full max-w-8xl mx-auto py-0 sm:px-7 px-5;
+/* ── Utilidades del design system ─────────────────────────────────────────── */
+
+@utility container {
+  width: 100%;
+  max-width: var(--max-width-8xl);
+  margin-inline: auto;
+  padding-inline: 1.25rem; /* gutter de la app: 20 */
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@utility bg-hero-gradient {
+  background: var(--gradient-hero);
+  --focus-ring: var(--color-brand-300);
 }
 
-section {
-  @apply bg-background;
+@utility bg-hero-gradient-wide {
+  background: var(--gradient-hero-wide);
+  --focus-ring: var(--color-brand-300);
 }
 
-.blog-details p,
-.blog-details hr {
-  @apply mb-8;
+/* Cifras de dinero: dígitos de ancho fijo, como moneyHero / money en la app. */
+@utility tabular {
+  font-variant-numeric: tabular-nums;
 }
-.blog-details hr {
-  @apply border-border;
+
+/* Etiqueta pequeña en mayúsculas (overline de la app, un punto más grande para la web). */
+@utility eyebrow {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
-.blog-details strong {
-  @apply font-bold dark:text-white;
+
+/*
+ * press — equivalente web de PressableScale (fiao-mobil/src/ui/PressableScale.tsx).
+ * Al presionar: escala y opacidad 0.92 en 90 ms; al soltar vuelve en 160 ms.
+ * La escala por defecto es 0.97; cada componente la ajusta como en la app:
+ *   press-card 0.985 (Card, ListRow) · press-button 0.98 (Button) · press-icon 0.9 (IconButton)
+ */
+@utility press {
+  --press-scale: 0.97;
+  transition-property: transform, opacity, background-color, border-color, color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-snappy);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+
+  &:active {
+    transform: scale(var(--press-scale));
+    opacity: 0.92;
+    transition-duration: var(--duration-instant);
+  }
 }
-.blog-details ul {
-  @apply mb-8 list-inside list-disc space-y-3;
+
+@utility press-card {
+  --press-scale: 0.985;
 }
-.blog-details ol {
-  @apply mb-8 list-inside list-decimal space-y-3;
+@utility press-button {
+  --press-scale: 0.98;
 }
-.blog-details h1 {
-  @apply mb-8 text-3xl font-bold sm:text-4xl md:text-[40px] md:leading-[1.28] text-white;
+@utility press-icon {
+  --press-scale: 0.9;
 }
-.blog-details h2 {
-  @apply mb-8 text-2xl font-bold sm:text-3xl md:text-[35px] md:leading-[1.28] text-white;
+
+/* Lift en hover, solo donde hay mouse (en táctil quedaría "pegado" tras el toque). */
+@utility lift {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    &:active {
+      transform: translateY(0) scale(var(--press-scale, 0.97));
+    }
+  }
 }
-.blog-details h3 {
-  @apply mb-6 text-2xl font-bold sm:text-[28px] sm:leading-[40px] text-white;
+
+/* ── Animaciones solo con CSS ─────────────────────────────────────────────── */
+
+@keyframes fiao-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fiao-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@utility animate-rise {
+  animation: fiao-rise var(--duration-slow) var(--ease-snappy) both;
+}
+
+@utility animate-float {
+  animation: fiao-float 6s ease-in-out infinite;
+}
+
+/* Movimiento reducido: se apagan animaciones y transiciones; el contenido queda visible
+   desde el primer frame. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Scroll-reveal (lo activa src/scripts/reveal.ts) ──────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal].reveal-pending:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  [data-reveal].reveal-pending {
+    transition:
+      opacity var(--duration-slow) var(--ease-snappy),
+      transform var(--duration-slow) var(--ease-snappy);
+  }
+}
+
+/* ── Render diferido de lo que está bajo el pliegue ─────────────────────────── */
+/* Las secciones con `defer-render` no se maquetan hasta acercarse a la pantalla: baja
+   mucho el trabajo de estilo y layout del primer render (y con eso el INP temprano).
+   `contain-intrinsic-size: auto` recuerda el alto real una vez pintada, para que la
+   barra de scroll no salte. */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }

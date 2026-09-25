@@ -1,0 +1,93 @@
+---
+/**
+ * Funciones — el carrusel de productos de tyba convertido en una grilla "bento": la
+ * primera tarjeta es grande y muestra la lista de clientes de la app (buscador, filtros
+ * y filas); el resto son tarjetas con IconBubble, como las quick-actions de Inicio.
+ */
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import Icon from "@/components/ui/Icon.astro";
+import DebtorRow from "@/components/ui/DebtorRow.astro";
+import MovementRow from "@/components/ui/MovementRow.astro";
+import { featuresContent, featureHighlights } from "@/data/landing";
+
+const lead = featureHighlights[0];
+const middle = featureHighlights.slice(1, -1);
+const last = featureHighlights.at(-1);
+---
+
+<section id="funciones" aria-labelledby="funciones-title" class="defer-render py-16 sm:py-24">
+  <div class="container flex flex-col gap-12 sm:gap-16">
+    <SectionHeading
+      id="funciones-title"
+      eyebrow={featuresContent.eyebrow}
+      title={featuresContent.title}
+      description={featuresContent.description}
+    />
+
+    <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {
+        lead && (
+          <li class="feature-card grid overflow-hidden rounded-2xl border border-border bg-surface md:col-span-2 md:grid-cols-2" data-reveal>
+            <div class="flex flex-col gap-4 p-6 sm:p-7">
+              <IconBubble icon={lead.icon} />
+              <h3 class="text-title-2 font-bold">{lead.title}</h3>
+              <p class="text-body-lg text-text-muted">{lead.description}</p>
+            </div>
+            <div class="flex flex-col gap-2.5 bg-bg p-5 sm:p-6" aria-hidden="true">
+              <div class="flex h-[46px] items-center gap-2 rounded-pill bg-ink-100 px-4 text-body text-ink-600">
+                <Icon name="search-outline" size={18} />
+                <span class="truncate">Buscar por nombre o teléfono</span>
+              </div>
+              <div class="grid grid-cols-3 rounded-pill bg-ink-100 p-1 text-center text-caption font-semibold">
+                <span class="py-2 text-ink-600">Todos</span>
+                <span class="rounded-pill bg-surface py-2 text-brand-text shadow-xs">Deben</span>
+                <span class="py-2 text-ink-600">Al día</span>
+              </div>
+              <DebtorRow name="Emanuel Jesús" phone="300 123 4589" balance={70000} />
+              <DebtorRow name="Andrés Ortiz" phone="300 123 4567" balance={50000} overdue />
+            </div>
+          </li>
+        )
+      }
+      {
+        middle.map((feature) => (
+          <li class="feature-card flex flex-col gap-4 rounded-2xl border border-border bg-surface p-6 sm:p-7" data-reveal>
+            <IconBubble icon={feature.icon} />
+            <h3 class="text-title-3 font-bold">{feature.title}</h3>
+            <p class="text-body-lg text-text-muted">{feature.description}</p>
+          </li>
+        ))
+      }
+      {
+        last && (
+          <li class="feature-card grid items-center gap-2 overflow-hidden rounded-2xl border border-border bg-surface md:col-span-2 md:grid-cols-2 lg:col-span-3" data-reveal>
+            <div class="flex flex-col gap-4 p-6 sm:p-7">
+              <IconBubble icon={last.icon} />
+              <h3 class="text-title-3 font-bold">{last.title}</h3>
+              <p class="text-body-lg text-text-muted">{last.description}</p>
+            </div>
+            <div class="flex flex-col divide-y divide-border px-6 pb-4 md:py-4 md:pr-7 md:pl-0" aria-hidden="true">
+              <MovementRow kind="debt" title="Gaseosa y pan" date="Hoy" amount={6500} />
+              <MovementRow kind="payment" title="Abono por transferencia" date="Lunes" amount={20000} />
+            </div>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .feature-card {
+    transition:
+      border-color var(--duration-fast) var(--ease-snappy),
+      box-shadow var(--duration-fast) var(--ease-snappy);
+  }
+  @media (hover: hover) {
+    .feature-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+</style>
