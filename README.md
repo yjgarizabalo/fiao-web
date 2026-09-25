@@ -36,3 +36,5 @@ Busca `TODO(datos)` en el código:
 - Confirmar el buzón `soporte@fiao.app`.
 - Páginas de Términos y Privacidad (`legalLinks` en `Footer.astro`) y redes sociales.
 - Precio, para la pregunta "¿Cuánto cuesta fiao?".
+- Número de WhatsApp de fiao (`whatsappContact` en `src/data/landing.ts`; hoy es un marcador).
+- QR real para el modal "Descarga la app" (`downloadModalContent.qrImage`; hoy muestra uno de ejemplo).

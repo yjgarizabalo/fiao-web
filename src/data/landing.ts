@@ -329,3 +329,32 @@ export const footerContent = {
   availabilityNote,
   copyright: "Hecho en Colombia.",
 };
+
+/**
+ * Botón flotante de WhatsApp.
+ * TODO(datos): poner el número real de fiao (con indicativo 57, solo dígitos). El actual
+ * es un marcador que no corresponde a ningún celular (los móviles de Colombia empiezan
+ * por 3), así que WhatsApp lo muestra como número no válido hasta que se cambie.
+ */
+export const whatsappContact = {
+  number: "570000000000",
+  message: "Hola 👋 Quiero saber más sobre fiao para mi negocio.",
+  label: "Escríbenos por WhatsApp",
+};
+
+/**
+ * Modal "Descarga la app" (se abre desde el botón flotante).
+ * TODO(datos): cuando existan los enlaces de las tiendas, reemplazar el QR de ejemplo por
+ * uno real (idealmente a una página que detecte Android/iPhone y mande a cada tienda).
+ * Con `qrImage` en una ruta de /public, el modal lo muestra en vez del ejemplo.
+ */
+export const downloadModalContent = {
+  fabLabel: "Descarga la app",
+  title: "Lleva fiao en tu celular",
+  description: "Escanea el código con la cámara de tu celular y descarga la app.",
+  mobileDescription: "Descárgala desde la tienda de tu celular: App Store o Google Play.",
+  qrImage: null as string | null,
+  qrExampleNote: "Código de ejemplo",
+  storesDivider: "o búscala en tu tienda",
+  availabilityNote,
+};
