@@ -16,7 +16,7 @@ import { pressable } from "@/lib/ui";
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {
         featureHighlights.map((feature) => (
-          <div class={`flex flex-col gap-4 p-7 rounded-2xl bg-background border border-border hover:shadow-md ${pressable}`} data-reveal>
+          <div class={`flex flex-col gap-4 p-7 rounded-2xl bg-surface border border-border hover:shadow-md ${pressable}`} data-reveal>
             <IconBubble icon={feature.icon} />
             <h3 class="text-lg font-bold text-ink-900">{feature.title}</h3>
             <p class="text-ink-500 leading-relaxed">{feature.description}</p>

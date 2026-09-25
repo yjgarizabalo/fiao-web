@@ -1,0 +1,81 @@
+---
+/**
+ * BalanceCard — el héroe de la pantalla de Inicio de fiao-mobil
+ * (src/features/home/screens/HomeScreen.tsx), reconstruido en HTML:
+ * degradado hero, saludo, píldora del negocio, "Total por cobrar" en moneyHero y la
+ * franja de estadísticas en vidrio. Es la pieza más reconocible de la app; en la landing
+ * se usa como "prueba" visual de lo que hace fiao.
+ *
+ * Es decorativa para lectores de pantalla (el dato de ejemplo no es información real),
+ * por eso lleva aria-hidden y un `summary` opcional en texto accesible.
+ */
+import Icon from "./Icon.astro";
+import { formatMoney } from "@/lib/format";
+
+export interface Props {
+  greeting?: string;
+  businessName: string;
+  amount: number;
+  label?: string;
+  owingCount: number;
+  clearCount: number;
+  /** Descripción en texto para lectores de pantalla. */
+  summary?: string;
+  compact?: boolean;
+  class?: string;
+}
+
+const {
+  greeting,
+  businessName,
+  amount,
+  label = "Total por cobrar",
+  owingCount,
+  clearCount,
+  summary,
+  compact = false,
+  class: className = "",
+} = Astro.props;
+---
+
+<div class={`relative overflow-hidden rounded-3xl bg-hero-gradient text-white ${compact ? "p-4" : "p-5"} ${className}`}>
+  {summary && <p class="sr-only">{summary}</p>}
+  <div aria-hidden="true">
+    {
+      greeting && (
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex flex-col gap-1.5">
+            <span class="text-caption uppercase text-white/60">{greeting}</span>
+            <span class="inline-flex max-w-[240px] items-center gap-1.5 self-start rounded-pill bg-white/12 px-3 py-1.5 text-caption font-semibold ring-1 ring-inset ring-white/15">
+              <Icon name="storefront" size={15} />
+              <span class="truncate">{businessName}</span>
+              <Icon name="chevron-down" size={14} class="opacity-70" />
+            </span>
+          </div>
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/12">
+            <Icon name="person" size={20} />
+          </span>
+        </div>
+      )
+    }
+
+    <div class={`flex flex-col items-center gap-0.5 text-center ${compact ? "pt-3 pb-3" : "pt-6 pb-5"}`}>
+      <span class="text-caption text-white/70">{label}</span>
+      <span class={`tabular font-extrabold ${compact ? "text-title-1" : "text-money-hero"}`}>{formatMoney(amount)}</span>
+      <span class="text-caption text-white/60">en {businessName}</span>
+    </div>
+
+    <div class="grid grid-cols-2 rounded-lg bg-white/8 py-3 ring-1 ring-inset ring-white/10">
+      <div class="flex flex-col items-center gap-0.5 border-r border-white/15">
+        <Icon name="alert-circle-outline" size={16} class="text-warning-500" />
+        <span class="tabular text-body font-semibold">{owingCount}</span>
+        <span class="text-caption text-white/60">clientes deben</span>
+      </div>
+      <div class="flex flex-col items-center gap-0.5">
+        <Icon name="checkmark-circle-outline" size={16} class="text-brand-300" />
+        <span class="tabular text-body font-semibold">{clearCount}</span>
+        <span class="text-caption text-white/60">clientes al día</span>
+      </div>
+    </div>
+  </div>
+</div>

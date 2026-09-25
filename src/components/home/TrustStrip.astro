@@ -9,7 +9,7 @@ import { trustStripItems } from "@/data/landing";
       {
         trustStripItems.map((item) => (
           <div class="flex items-start gap-4" data-reveal>
-            <IconBubble icon={item.icon} size="md" />
+            <IconBubble icon={item.icon} />
             <div class="flex flex-col gap-1">
               <h3 class="font-bold text-ink-900">{item.title}</h3>
               <p class="text-sm text-ink-500 leading-relaxed">{item.description}</p>

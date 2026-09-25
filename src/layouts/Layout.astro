@@ -1,5 +1,4 @@
 ---
-import "@fontsource-variable/dm-sans";
 import "@/styles/global.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer.astro";
@@ -51,6 +50,9 @@ const mobileApplicationJsonLd = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- Fuente principal: se precarga para que el titular del hero no espere a la CSS. -->
+    <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
@@ -82,7 +84,7 @@ const mobileApplicationJsonLd = {
       import "@/scripts/reveal";
     </script>
   </head>
-  <body class="bg-background text-foreground">
+  <body>
     <Header client:load />
     <main>
       <slot />

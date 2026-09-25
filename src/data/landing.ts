@@ -8,6 +8,8 @@
  * deshonesto — la persuasión de esta página recae en el producto real.
  */
 
+import type { IconName } from "@/lib/icons";
+
 export interface NavItem {
   label: string;
   href: string;
@@ -55,24 +57,24 @@ export const heroContent = {
  * funciona igual en Android y iPhone.
  */
 export interface TrustStripItem {
-  icon: "shield-check" | "message-circle" | "smartphone";
+  icon: IconName;
   title: string;
   description: string;
 }
 
 export const trustStripItems: TrustStripItem[] = [
   {
-    icon: "shield-check",
+    icon: "shield-checkmark-outline",
     title: "Tus datos, solo tuyos",
     description: "La información de cada negocio queda separada de los demás. Nadie más ve los saldos de tus clientes.",
   },
   {
-    icon: "message-circle",
+    icon: "logo-whatsapp",
     title: "Recordatorios de verdad",
     description: "El mensaje de cobro sale por el WhatsApp real de tu cliente, no por una notificación que nadie lee.",
   },
   {
-    icon: "smartphone",
+    icon: "phone-portrait-outline",
     title: "Android y iPhone",
     description: "La misma experiencia sin importar el celular que uses tú o el que tenga tu negocio.",
   },
@@ -106,44 +108,44 @@ export const howItWorksSteps: Step[] = [
 ];
 
 export interface Feature {
-  icon: "users" | "wallet" | "store" | "message-circle" | "list" | "shield-check";
+  icon: IconName;
   title: string;
   description: string;
 }
 
 export const featureHighlights: Feature[] = [
   {
-    icon: "users",
+    icon: "people-outline",
     title: "Control de clientes y deudas",
     description:
       "Cada cliente con su historial completo: cuánto te debe, desde cuándo y qué te ha pagado hasta ahora.",
   },
   {
-    icon: "wallet",
+    icon: "cash-outline",
     title: "Abonos parciales o pago total",
     description:
       "Registra un abono a una deuda puntual o repártelo entre todo lo que un cliente te debe, como prefieras.",
   },
   {
-    icon: "store",
+    icon: "storefront-outline",
     title: "Varios negocios, una sola cuenta",
     description:
       "¿Tienes más de una tienda? Cámbiate entre negocios sin salir de la app ni mezclar las cuentas de cada uno.",
   },
   {
-    icon: "message-circle",
+    icon: "logo-whatsapp",
     title: "Recordatorios por WhatsApp",
     description:
       "Envíale a tu cliente un recordatorio de pago respetuoso, ya redactado, directo por WhatsApp desde la app.",
   },
   {
-    icon: "list",
+    icon: "receipt-outline",
     title: "Historial de movimientos",
     description:
       "Cada fiado y cada abono queda ordenado por fecha, como el estado de cuenta de tu negocio, siempre a la mano.",
   },
   {
-    icon: "shield-check",
+    icon: "shield-checkmark-outline",
     title: "Datos organizados por negocio",
     description:
       "La información de cada negocio y de sus clientes queda separada y protegida — como debe ser.",

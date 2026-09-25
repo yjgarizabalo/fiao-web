@@ -1,55 +1,37 @@
 /**
- * Scroll-reveal con la API vanilla de `motion` (no `motion/react`): así las
- * secciones estáticas de la landing animan sin pagar costo de hidratación.
- * Cada elemento con [data-reveal] entra con un fade + leve desplazamiento la
- * primera vez que cruza el viewport.
+ * Scroll-reveal sin librerías: un IntersectionObserver marca con `is-visible` cada
+ * [data-reveal] la primera vez que entra en pantalla, y el CSS (global.css) hace el
+ * resto. Reemplaza a `motion` (≈10 KB) por unas pocas líneas.
  *
- * El contenido nunca debe depender de que este script funcione: si
- * IntersectionObserver no existe, si `motion` falla al cargar, o si algo
- * lanza un error, el fallback es dejar todo visible de una — el peor caso
- * posible es perder la animación, nunca esconder el copy de la página.
+ * El contenido nunca depende de este script: los elementos solo se ocultan si <html>
+ * tiene la clase `reveal-ready`, que se pone aquí mismo y solo cuando todo lo necesario
+ * existe. Si el script no carga o el navegador no tiene IntersectionObserver, todo queda
+ * visible. Con movimiento reducido, el CSS nunca oculta nada.
  */
-import { animateMini, inView } from "motion";
-
-const REVEAL_DURATION = 0.38; // duration.slow de fiao-mobil
-
+const root = document.documentElement;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function setupReveal() {
+if ("IntersectionObserver" in window && !prefersReducedMotion) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+  );
+
   const targets = document.querySelectorAll<HTMLElement>("[data-reveal]");
-
-  if (!("IntersectionObserver" in window) || prefersReducedMotion) {
-    return; // el contenido ya es visible por defecto: no hay nada que "arreglar"
-  }
-
+  const viewportBottom = window.innerHeight;
   targets.forEach((target) => {
-    try {
-      target.style.opacity = "0";
-      inView(
-        target,
-        () => {
-          animateMini(
-            target,
-            { opacity: [0, 1], y: [16, 0] },
-            { duration: REVEAL_DURATION, ease: [0.22, 1, 0.36, 1] },
-          );
-        },
-        { margin: "0px 0px -10% 0px" },
-      );
-    } catch {
-      target.style.opacity = "1"; // si algo falla para este elemento, que se vea igual
+    // Lo que ya está en pantalla al cargar no se anima: evita parpadeos sobre el LCP.
+    if (target.getBoundingClientRect().top < viewportBottom) {
+      target.classList.add("is-visible");
+    } else {
+      observer.observe(target);
     }
   });
-}
-
-try {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setupReveal);
-  } else {
-    setupReveal();
-  }
-} catch {
-  document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => {
-    el.style.opacity = "1";
-  });
+  root.classList.add("reveal-ready");
 }

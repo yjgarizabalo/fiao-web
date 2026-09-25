@@ -13,7 +13,7 @@ const FAQAccordion = ({ items }: FAQAccordionProps) => {
       {items.map((item, index) => {
         const isOpen = openIndex === index;
         return (
-          <div key={item.question} className="rounded-2xl border border-border bg-background overflow-hidden">
+          <div key={item.question} className="rounded-2xl border border-border bg-surface overflow-hidden">
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : index)}

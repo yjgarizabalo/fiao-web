@@ -7,7 +7,7 @@ import path from 'path';
 // site: confirmar el dominio real de producción antes de publicar (ver src/lib/seo.ts)
 export default defineConfig({
   site: 'https://fiao.app',
-  integrations: [react(), sitemap()],
+  integrations: [react(), sitemap({ filter: (page) => !page.includes('/kit') })],
   vite: {
     plugins: [tailwindcss()],
     resolve: {
