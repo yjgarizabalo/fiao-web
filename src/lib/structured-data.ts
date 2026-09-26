@@ -28,11 +28,13 @@ const ids = {
 
 interface GraphOptions {
   logoUrl: string;
+  /** URL absoluta de la imagen de compartir (Open Graph), optimizada en build. */
+  ogImageUrl: string;
   /** Nodos propios de la home. En otras páginas solo van Organization y WebSite. */
   home?: boolean;
 }
 
-export const buildStructuredData = ({ logoUrl, home = false }: GraphOptions) => {
+export const buildStructuredData = ({ logoUrl, ogImageUrl, home = false }: GraphOptions) => {
   const organization = {
     "@type": "Organization",
     "@id": ids.organization,
@@ -72,7 +74,7 @@ export const buildStructuredData = ({ logoUrl, home = false }: GraphOptions) => 
     alternateName: "fiao: control de fiado",
     description: site.description,
     url: site.url,
-    image: absoluteUrl(site.ogImage.path),
+    image: ogImageUrl,
     operatingSystem: "Android, iOS",
     applicationCategory: "FinanceApplication",
     applicationSubCategory: "Control de fiado y cuentas por cobrar",
@@ -95,7 +97,7 @@ export const buildStructuredData = ({ logoUrl, home = false }: GraphOptions) => 
     about: { "@id": ids.app },
     primaryImageOfPage: {
       "@type": "ImageObject",
-      url: absoluteUrl(site.ogImage.path),
+      url: ogImageUrl,
       width: site.ogImage.width,
       height: site.ogImage.height,
     },

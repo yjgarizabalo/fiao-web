@@ -17,7 +17,14 @@ export const site = {
   locale: "es_CO",
   language: "es-CO",
   themeColor: "#0B0F14",
-  ogImage: { path: "/og/fiao-og.jpg", width: 1200, height: 630, alt: "fiao: Tus vales, siempre al día. La app para llevar el fiado de tu tienda, disponible para Android y iPhone." },
+  /**
+   * Imagen para compartir (Open Graph / Twitter). El archivo vive en
+   * src/assets/ogg-fiao.png y se optimiza en build con getImage (ver Layout.astro),
+   * así que aquí solo declaramos el tipo, las dimensiones y el texto alternativo.
+   * Es cuadrada (1:1): WhatsApp la muestra completa; Facebook/LinkedIn la recortan a
+   * su banner apaisado dejando el isotipo centrado.
+   */
+  ogImage: { width: 1200, height: 1200, type: "image/png", alt: "Logo de fiao, la app del fiado para tu tienda" },
   country: "CO",
 };
 

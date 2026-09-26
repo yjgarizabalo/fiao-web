@@ -15,6 +15,7 @@ import { site, absoluteUrl } from "@/lib/seo";
 import { buildStructuredData } from "@/lib/structured-data";
 import appIcon from "@/assets/fiao-app-icon.png";
 import squareLogo from "@/assets/fiao-logo-cuadrado.png";
+import ogImageSrc from "@/assets/ogg-fiao.png";
 
 export interface Props {
   /** Título de la página. Sin él se usa el de la home. */
@@ -32,14 +33,18 @@ const { title, description = site.description, noindex = false, solidHeader = fa
 
 const pageTitle = title ? `${title} · ${site.name}` : site.homeTitle;
 const canonicalUrl = absoluteUrl(Astro.url.pathname);
-const ogImageUrl = absoluteUrl(site.ogImage.path);
 
-const [touchIcon, logo] = await Promise.all([
+const [touchIcon, logo, ogImage] = await Promise.all([
   getImage({ src: appIcon, width: 180, height: 180, format: "png" }),
   getImage({ src: squareLogo, width: 512, height: 512, format: "png" }),
+  // quality activa la paleta indexada de sharp: un PNG plano como este pasa de ~730 kB a
+  // ~7 kB, clave para que WhatsApp muestre la vista previa al compartir.
+  getImage({ src: ogImageSrc, width: site.ogImage.width, height: site.ogImage.height, format: "png", quality: 80 }),
 ]);
 
-const structuredData = buildStructuredData({ logoUrl: absoluteUrl(logo.src), home: homeSchema });
+const ogImageUrl = absoluteUrl(ogImage.src);
+
+const structuredData = buildStructuredData({ logoUrl: absoluteUrl(logo.src), ogImageUrl, home: homeSchema });
 ---
 
 <!doctype html>
@@ -77,7 +82,8 @@ const structuredData = buildStructuredData({ logoUrl: absoluteUrl(logo.src), hom
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:secure_url" content={ogImageUrl} />
+    <meta property="og:image:type" content={site.ogImage.type} />
     <meta property="og:image:width" content={String(site.ogImage.width)} />
     <meta property="og:image:height" content={String(site.ogImage.height)} />
     <meta property="og:image:alt" content={site.ogImage.alt} />
