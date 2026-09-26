@@ -1,14 +1,10 @@
 /**
  * Una sola fuente de verdad para lo que repiten los meta tags, el JSON-LD, llms.txt y
- * robots.txt.
- *
- * TODO(datos): `url` es un marcador (coincide con el scheme "fiao" de app.json en
- * fiao-mobil). Confirmar el dominio real de producción; hay que cambiarlo aquí y en
- * astro.config.mjs (`site`).
+ * robots.txt. Si cambia el dominio, actualizarlo aquí y en astro.config.mjs (`site`).
  */
 export const site = {
   name: "fiao",
-  url: "https://fiao.app",
+  url: "https://elfiao.com",
   /** Título de la home: marca + qué es + plataformas (≤ 60 caracteres). */
   homeTitle: "fiao: la app del fiado para tu tienda | Android y iPhone",
   description:

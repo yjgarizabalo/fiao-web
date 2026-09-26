@@ -24,14 +24,16 @@ export const navItems: NavItem[] = [
 
 /**
  * Enlaces de descarga.
- * TODO(datos): fiao aún no tiene ficha publicada en App Store ni en Google Play (ver
- * Fase 11.6 del CLAUDE.md de fiao-mobil). Mientras tanto los botones llevan a la sección
- * de descarga. Cambiar estas dos URL basta para activarlos en toda la página y en el
- * JSON-LD (que solo publica `installUrl` cuando la URL es real).
+ * - Android: por ahora es la APK directa (build de EAS), no la ficha de Google Play. El
+ *   badge la descarga al instante.
+ * - iOS: sigue en null porque la app aún no está publicada en App Store; el badge abre el
+ *   modal "Muy pronto en la App Store" en vez de navegar.
+ * Cuando existan las fichas reales, basta con reemplazar estas URL: activan los badges en
+ * toda la página y el JSON-LD (que solo publica `installUrl` cuando la URL es real).
  */
 export const storeLinks = {
   ios: null as string | null,
-  android: null as string | null,
+  android: "https://expo.dev/artifacts/eas/4dCEKd-q16BIHM0uwjrxnmzdgrcowSr49gODg6jO-tE.apk" as string | null,
 };
 
 /** Nombre de cada tienda, como lo escriben Apple y Google. */
@@ -43,7 +45,7 @@ export const heroContent = {
   eyebrow: "¿Todavía fías en cuaderno?",
   headline: "Tus vales, siempre al día",
   subheadline:
-    "Anota lo que fías, registra cada abono y mira en un segundo quién te debe y cuánto. Todo desde tu celular, sin cuaderno.",
+    "Anota lo que fías y quién te ha pagado. Mira en un segundo cuánto te deben, sin cuaderno ni cuentas a mano.",
   primaryCta: { label: "Descargar fiao", href: "/#descargar" },
   secondaryCta: { label: "Ver cómo funciona", href: "/#como-funciona" },
   availabilityNote,
@@ -200,10 +202,11 @@ export const inStoreContent = {
     bullets: ["Montos rápidos: +$ 2.000, +$ 5.000, +$ 10.000…", "Plazo de 8, 15 o 30 días, o sin plazo", "Una nota para acordarte qué se llevó"],
   },
   cobrar: {
-    title: "Cobrar, sin pena",
+    title: "Cobra sin pena, ni vueltas",
     description:
-      "fiao arma un recordatorio amable con el saldo exacto. Tú lo revisas y lo mandas desde tu WhatsApp, a uno o a varios clientes.",
+      "fiao te deja listo un recordatorio amable con el saldo exacto. Tú decides si lo mandas y a quién, directo desde tu WhatsApp.",
     bullets: ["Sale desde tu propio WhatsApp", "Con el nombre de tu negocio y el saldo al día", "Tú decides a quién y cuándo"],
+    cta: { label: "Recuerda un cobro hoy mismo", href: "/#descargar" },
   },
 };
 
@@ -224,7 +227,7 @@ export const whyFiaoContent = {
   eyebrow: "Por qué fiao",
   title: "¿Por qué pasar del cuaderno a fiao?",
   intro:
-    "El cuaderno sirve, pero se moja, se pierde y toca sumarlo a mano. fiao lleva la misma cuenta de siempre, solo que sin errores y siempre a la mano.",
+    "El cuaderno cumple, pero se moja, se pierde y toca sumarlo a mano cada vez. fiao lleva la misma cuenta de siempre, sin esos dolores de cabeza.",
   rows: [
     { topic: "Si se moja o se pierde", cuaderno: "Se pierde todo lo anotado.", fiao: "Tus cuentas quedan guardadas en tu cuenta, no en el papel." },
     { topic: "¿Cuánto me debe un cliente?", cuaderno: "Buscar página por página y sumar.", fiao: "Lo buscas y ves su saldo exacto." },
@@ -260,7 +263,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "¿Qué es fiao y para quién es?",
     answer:
-      "fiao es una app para llevar el fiado desde el celular, en vez del cuaderno. Es para tenderos y dueños de pequeños negocios en Colombia que les venden a crédito a sus clientes: anotas lo que fías, registras los abonos y sabes en todo momento quién te debe, cuánto y desde cuándo.",
+      "fiao es la app que reemplaza el cuaderno del fiado. Es para tenderos y pequeños negocios en Colombia que venden a crédito. Anotas lo que fías, registras los abonos y sabes al instante quién te debe, cuánto y desde cuándo.",
   },
   {
     question: "¿fiao funciona en Android y en iPhone?",
@@ -318,7 +321,7 @@ export const downloadCtaContent = {
   eyebrow: "Descarga fiao",
   headline: "Deja el cuaderno. Lleva tus vales en el celular.",
   subheadline:
-    "Descarga fiao, crea tu negocio y anota tu primer fiado hoy mismo. Siempre sabrás quién te debe y cuánto.",
+    "Descarga fiao, crea tu negocio en un par de minutos y anota tu primer fiado hoy mismo. Nunca más te preguntarás quién te debe.",
   availabilityNote,
 };
 
@@ -343,18 +346,33 @@ export const whatsappContact = {
 };
 
 /**
- * Modal "Descarga la app" (se abre desde el botón flotante).
- * TODO(datos): cuando existan los enlaces de las tiendas, reemplazar el QR de ejemplo por
- * uno real (idealmente a una página que detecte Android/iPhone y mande a cada tienda).
- * Con `qrImage` en una ruta de /public, el modal lo muestra en vez del ejemplo.
+ * Modal "Descarga la app" (se abre desde el botón flotante y los botones "Descargar").
+ * El QR es real y apunta a /descargar: esa página detecta el sistema del que escanea, así que
+ * un mismo QR sirve para ambos (Android baja la APK, iPhone ve "aún no disponible"). Los
+ * badges de abajo hacen lo mismo al tocarlos. Con `qrImage` (ruta en /public) el modal
+ * muestra esa imagen en vez del QR generado.
  */
 export const downloadModalContent = {
   fabLabel: "Descarga la app",
   title: "Lleva fiao en tu celular",
   description: "Escanea el código con la cámara de tu celular y descarga la app.",
-  mobileDescription: "Descárgala desde la tienda de tu celular: App Store o Google Play.",
+  mobileDescription: "Descárgala directo en tu celular:",
   qrImage: null as string | null,
-  qrExampleNote: "Código de ejemplo",
-  storesDivider: "o búscala en tu tienda",
+  qrAlt: "Código QR para descargar la app de fiao",
+  qrCaption: "Escanéalo con tu celular",
+  storesDivider: "o elige tu sistema",
   availabilityNote,
+};
+
+/**
+ * Modal "Muy pronto en App Store": se abre al tocar el badge de iOS mientras
+ * storeLinks.ios siga en null (la app todavía no está publicada para iPhone). Cuando el
+ * enlace real exista, el badge vuelve a llevar directo a la tienda y este modal ya no se
+ * dispara. Mensaje tranquilizador, sin prometer una fecha.
+ */
+export const iosSoonModalContent = {
+  title: "Muy pronto en la App Store",
+  description: "Estamos afinando fiao para iPhone. En muy poco tiempo la vas a poder descargar. ¡Gracias por tu paciencia!",
+  note: "Ya casi está lista",
+  closeLabel: "Entendido",
 };

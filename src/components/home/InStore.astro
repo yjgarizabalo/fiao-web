@@ -10,7 +10,7 @@
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import Icon from "@/components/ui/Icon.astro";
 import Button from "@/components/ui/Button.astro";
-import { inStoreContent, whatsappExample, heroContent } from "@/data/landing";
+import { inStoreContent, whatsappExample } from "@/data/landing";
 import { formatMoney } from "@/lib/format";
 
 const { fiar, cobrar } = inStoreContent;
@@ -125,7 +125,7 @@ const balance = formatMoney(whatsappExample.balance);
           }
         </ul>
         <div class="pt-2">
-          <Button href={heroContent.primaryCta.href} size="lg" iconRight="chevron-forward">{heroContent.primaryCta.label}</Button>
+          <Button href={cobrar.cta.href} size="lg" iconRight="chevron-forward">{cobrar.cta.label}</Button>
         </div>
       </div>
     </article>

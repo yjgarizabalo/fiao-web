@@ -4,9 +4,10 @@
  * logo de la tienda, dos líneas con el texto que usa cada tienda en español) pero se
  * dibujan en HTML: nítidos a cualquier tamaño, sin imágenes extra.
  *
- * TODO(datos): mientras no existan las fichas en las tiendas (storeLinks en null), los
- * botones llevan a la sección #descargar. Al publicar, basta con poner las URL reales en
- * src/data/landing.ts.
+ * TODO(datos): mientras no existan las fichas en las tiendas (storeLinks en null), el badge
+ * de Android lleva a la sección #descargar y el de iOS abre el modal "Muy pronto en la App
+ * Store" (IosSoonModal). Al publicar, basta con poner las URL reales en src/data/landing.ts:
+ * con un enlace, cada badge vuelve a llevar directo a su tienda.
  */
 import Icon from "./Icon.astro";
 import { storeLinks, storeNames } from "@/data/landing";
@@ -40,12 +41,22 @@ const iconSize = size === "md" ? 22 : 24;
   {
     stores.map((store) => {
       const isLive = Boolean(store.href);
+      // iOS sin enlace: abre el modal "Muy pronto en la App Store" en vez de navegar.
+      const comingSoon = store.key === "ios" && !isLive;
+      // Descarga directa de la APK (Android): baja el archivo sin abrir una pestaña en blanco.
+      const isApk = isLive && store.href!.endsWith(".apk");
+      const Tag = comingSoon ? "button" : "a";
+      const tagProps = comingSoon
+        ? { type: "button" as const, "data-open-ios-soon": "", "aria-haspopup": "dialog", "aria-controls": "ios-soon-modal" }
+        : {
+            href: store.href ?? "/#descargar",
+            ...(isApk ? { rel: "noopener", download: "" } : isLive ? { target: "_blank", rel: "noopener" } : {}),
+          };
       return (
         <li>
-          <a
-            href={store.href ?? "/#descargar"}
-            class={`press press-button inline-flex items-center rounded-md bg-ink-900 text-white ${sizeClass} ${ring}`}
-            {...(isLive ? { target: "_blank", rel: "noopener" } : {})}
+          <Tag
+            class={`press press-button inline-flex cursor-pointer items-center rounded-md bg-ink-900 text-white ${sizeClass} ${ring}`}
+            {...tagProps}
           >
             <Icon name={store.icon} size={iconSize} />
             <span class="flex flex-col text-left leading-none">
@@ -54,7 +65,7 @@ const iconSize = size === "md" ? 22 : 24;
                 {storeNames[store.key]}
               </span>
             </span>
-          </a>
+          </Tag>
         </li>
       );
     })

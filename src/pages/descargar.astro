@@ -1,0 +1,128 @@
+---
+/**
+ * /descargar — destino del QR del modal. Un QR no puede saber quién lo escanea, así que
+ * esta página detecta el sistema en el navegador y actúa:
+ *  - Android → dispara la descarga de la APK (storeLinks.android).
+ *  - iPhone/iPad → muestra "Muy pronto en la App Store" (no baja nada).
+ *  - Escritorio u otro → ofrece el botón de Android y avisa que iPhone llega pronto.
+ *
+ * Es una página utilitaria (noindex, fuera del sitemap). No usa el Layout completo para
+ * redirigir a Android lo más rápido posible.
+ */
+import "@/styles/global.css";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { storeLinks, iosSoonModalContent as ios } from "@/data/landing";
+
+const androidUrl = storeLinks.android;
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0B0F14" />
+    <title>Descargar fiao</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="flex min-h-dvh items-center justify-center bg-bg p-6 text-text">
+    <main class="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl bg-surface p-8 text-center shadow-xl ring-1 ring-border">
+      <!-- Estado inicial mientras el script decide. -->
+      <div id="state-loading" class="flex flex-col items-center gap-4">
+        <IconBubble icon="phone-portrait-outline" size={56} />
+        <p class="text-body-lg text-text-muted">Preparando tu descarga…</p>
+      </div>
+
+      <!-- Android: descarga la APK. -->
+      <div id="state-android" class="hidden flex-col items-center gap-4">
+        <IconBubble icon="logo-android" size={56} tone="brand" />
+        <div class="flex flex-col gap-2">
+          <h1 class="text-title-2 font-extrabold">Descargando fiao…</h1>
+          <p class="text-body-lg text-text-muted">Si la descarga no empieza sola, toca el botón.</p>
+        </div>
+        {
+          androidUrl && (
+            <a
+              href={androidUrl}
+              rel="noopener"
+              download
+              class="press press-button inline-flex h-12 items-center justify-center rounded-lg bg-brand-500 px-6 font-bold text-ink-900 hover:bg-brand-400"
+            >
+              Descargar para Android
+            </a>
+          )
+        }
+      </div>
+
+      <!-- iPhone: aún no disponible. -->
+      <div id="state-ios" class="hidden flex-col items-center gap-4">
+        <IconBubble icon="logo-apple" size={56} tone="neutral" />
+        <div class="flex flex-col gap-2">
+          <h1 class="text-title-2 font-extrabold">{ios.title}</h1>
+          <p class="text-body-lg text-text-muted">{ios.description}</p>
+        </div>
+        <p class="inline-flex items-center gap-2 rounded-pill bg-brand-50 px-3.5 py-1.5 text-body font-semibold text-brand-text">
+          <Icon name="time-outline" size={16} />
+          {ios.note}
+        </p>
+        <a href="/" class="press press-button mt-1 inline-flex h-12 items-center justify-center rounded-lg bg-ink-900 px-6 font-bold text-white hover:bg-ink-800">
+          Volver al inicio
+        </a>
+      </div>
+
+      <!-- Escritorio u otro sistema. -->
+      <div id="state-desktop" class="hidden flex-col items-center gap-4">
+        <IconBubble icon="phone-portrait-outline" size={56} />
+        <div class="flex flex-col gap-2">
+          <h1 class="text-title-2 font-extrabold">Descarga fiao</h1>
+          <p class="text-body-lg text-text-muted">Descarga la versión de Android. La de iPhone estará muy pronto.</p>
+        </div>
+        {
+          androidUrl && (
+            <a
+              href={androidUrl}
+              rel="noopener"
+              download
+              class="press press-button inline-flex h-12 items-center justify-center rounded-lg bg-brand-500 px-6 font-bold text-ink-900 hover:bg-brand-400"
+            >
+              Descargar para Android
+            </a>
+          )
+        }
+        <a href="/" class="text-body font-semibold text-text-muted transition-colors hover:text-text">Volver al inicio</a>
+      </div>
+    </main>
+
+    <script define:vars={{ androidUrl }}>
+      (function () {
+        const ua = navigator.userAgent || navigator.vendor || "";
+        // iPadOS 13+ se hace pasar por "Macintosh": se distingue porque tiene pantalla táctil.
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && "ontouchend" in document);
+        const isAndroid = /android/i.test(ua);
+
+        const show = (id) => {
+          document.getElementById("state-loading").classList.add("hidden");
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.classList.remove("hidden");
+          el.classList.add("flex");
+        };
+
+        if (isAndroid && androidUrl) {
+          show("state-android");
+          // Deja pintar el mensaje y luego dispara la descarga de la APK.
+          setTimeout(() => {
+            window.location.href = androidUrl;
+          }, 500);
+        } else if (isIOS) {
+          show("state-ios");
+        } else {
+          show("state-desktop");
+        }
+      })();
+    </script>
+  </body>
+</html>

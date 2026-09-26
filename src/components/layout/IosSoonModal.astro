@@ -1,0 +1,201 @@
+---
+/**
+ * Modal "Muy pronto en la App Store". Se abre desde cualquier badge de iOS mientras la app
+ * no esté publicada para iPhone (storeLinks.ios en null): StoreBadges renderiza ese badge
+ * como <button data-open-ios-soon> en vez de un enlace. Un solo modal para toda la página;
+ * se incluye una vez en Layout.astro.
+ *
+ * Es un <dialog> nativo con el mismo lenguaje visual que el modal de descarga: tarjeta
+ * centrada en escritorio, bottom-sheet en móvil, barra superior fija con la X, cierre con
+ * Esc / X / tocando el fondo, y devuelve el foco al badge que lo abrió.
+ */
+import Icon from "@/components/ui/Icon.astro";
+import IconBubble from "@/components/ui/IconBubble.astro";
+import { iosSoonModalContent as m } from "@/data/landing";
+---
+
+<dialog id="ios-soon-modal" class="ios-modal" aria-labelledby="ios-modal-title" aria-describedby="ios-modal-desc">
+  <div class="ios-modal__bar">
+    <span class="h-1 w-10 rounded-full bg-ink-200 sm:hidden" aria-hidden="true"></span>
+    <form method="dialog" class="ios-modal__close">
+      <button
+        type="submit"
+        class="press press-icon inline-flex h-10 w-10 items-center justify-center rounded-full bg-ink-100 text-text-muted hover:bg-ink-200"
+        aria-label="Cerrar"
+      >
+        <Icon name="close" size={18} />
+      </button>
+    </form>
+  </div>
+
+  <div class="flex flex-col items-center gap-5 px-6 pt-1 pb-7 text-center sm:px-8">
+    <IconBubble icon="logo-apple" tone="neutral" size={56} />
+
+    <div class="flex flex-col gap-2">
+      <h2 id="ios-modal-title" class="text-title-2 font-extrabold">{m.title}</h2>
+      <p id="ios-modal-desc" class="text-body-lg text-text-muted">{m.description}</p>
+    </div>
+
+    <p class="inline-flex items-center gap-2 rounded-pill bg-brand-50 px-3.5 py-1.5 text-body font-semibold text-brand-text">
+      <Icon name="time-outline" size={16} />
+      {m.note}
+    </p>
+
+    <form method="dialog" class="w-full pt-1">
+      <button
+        type="submit"
+        class="press press-button inline-flex h-12 w-full items-center justify-center rounded-lg bg-ink-900 text-body-lg font-bold text-white hover:bg-ink-800 sm:h-13"
+      >
+        {m.closeLabel}
+      </button>
+    </form>
+  </div>
+</dialog>
+
+<style>
+  .ios-modal {
+    width: min(400px, calc(100vw - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-3xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-xl);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Barra de scroll fina y discreta cuando el contenido no cabe (pantallas bajas). */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-200) transparent;
+  }
+  .ios-modal::-webkit-scrollbar {
+    width: 10px;
+  }
+  .ios-modal::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .ios-modal::-webkit-scrollbar-thumb {
+    background: var(--color-ink-200);
+    border: 3px solid var(--color-surface);
+    border-radius: var(--radius-pill);
+  }
+  .ios-modal::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-300);
+  }
+  .ios-modal::backdrop {
+    background: rgb(11 15 20 / 0.6);
+    backdrop-filter: blur(4px);
+  }
+  :global(html:has(.ios-modal[open])) {
+    overflow: hidden;
+  }
+
+  /* Barra superior fija: manija (móvil) + cerrar, siempre visibles. */
+  .ios-modal__bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.75rem 0.75rem 0.25rem;
+    background: var(--color-surface);
+    transition: box-shadow var(--duration-fast) var(--ease-snappy);
+  }
+  .ios-modal__close {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+  }
+  /* Hairline sutil bajo la barra solo cuando el contenido se ha desplazado. */
+  .ios-modal[data-scrolled="true"] .ios-modal__bar {
+    box-shadow: 0 1px 0 0 var(--color-border);
+  }
+
+  /* Entrada: escala desde 0.94 como Dialog en la app; en móvil sube como Sheet. */
+  .ios-modal[open] {
+    animation: ios-modal-in var(--duration-normal) var(--ease-snappy);
+  }
+  .ios-modal[open]::backdrop {
+    animation: ios-backdrop-in var(--duration-normal) ease-out;
+  }
+  @keyframes ios-modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @keyframes ios-backdrop-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (width >= 40rem) {
+    .ios-modal__bar {
+      min-height: 3.25rem;
+      padding-top: 1rem;
+    }
+    .ios-modal__close {
+      top: 0.875rem;
+      right: 0.875rem;
+    }
+  }
+
+  @media (width < 40rem) {
+    .ios-modal {
+      width: 100%;
+      max-width: 100%;
+      margin: auto 0 0;
+      border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .ios-modal[open] {
+      animation: ios-sheet-in var(--duration-slow) var(--ease-soft);
+    }
+    @keyframes ios-sheet-in {
+      from {
+        transform: translateY(100%);
+      }
+    }
+  }
+</style>
+
+<script>
+  const iosModal = document.getElementById("ios-soon-modal") as HTMLDialogElement | null;
+
+  if (iosModal) {
+    let opener: HTMLElement | null = null;
+
+    document.addEventListener("click", (event) => {
+      const trigger = (event.target as HTMLElement).closest<HTMLElement>("[data-open-ios-soon]");
+      if (!trigger) return;
+      event.preventDefault();
+      // Si el badge está dentro de otro modal abierto (p. ej. el de descarga), ciérralo antes.
+      const parentDialog = trigger.closest("dialog");
+      if (parentDialog && parentDialog !== iosModal && parentDialog.open) parentDialog.close();
+      opener = trigger;
+      iosModal.showModal();
+      // Siempre abre desde arriba, sin arrastrar el scroll de una apertura anterior.
+      iosModal.scrollTop = 0;
+      iosModal.dataset.scrolled = "false";
+    });
+
+    // Tocar el fondo (fuera de la tarjeta) cierra el modal.
+    iosModal.addEventListener("click", (event) => {
+      if (event.target === iosModal) iosModal.close();
+    });
+    iosModal.addEventListener("close", () => opener?.focus({ preventScroll: true }));
+
+    // La barra superior gana una sombra sutil en cuanto el contenido se desplaza.
+    iosModal.addEventListener(
+      "scroll",
+      () => {
+        iosModal.dataset.scrolled = String(iosModal.scrollTop > 4);
+      },
+      { passive: true },
+    );
+  }
+</script>

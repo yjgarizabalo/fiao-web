@@ -11,6 +11,7 @@ import Header from "@/components/layout/Header.astro";
 import Footer from "@/components/layout/Footer.astro";
 import ScrollToTop from "@/components/layout/ScrollToTop.astro";
 import FloatingActions from "@/components/layout/FloatingActions.astro";
+import IosSoonModal from "@/components/layout/IosSoonModal.astro";
 import { site, absoluteUrl } from "@/lib/seo";
 import { buildStructuredData } from "@/lib/structured-data";
 import appIcon from "@/assets/fiao-app-icon.png";
@@ -110,6 +111,7 @@ const structuredData = buildStructuredData({ logoUrl: absoluteUrl(logo.src), ogI
     </main>
     <Footer />
     <FloatingActions />
+    <IosSoonModal />
     <ScrollToTop />
   </body>
 </html>

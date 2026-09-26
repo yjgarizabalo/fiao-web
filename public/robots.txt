@@ -1,6 +1,6 @@
-# fiao — https://fiao.app
+# fiao — https://elfiao.com
 # El sitio es público y queremos que buscadores y asistentes de IA lo lean y lo citen.
-# Resumen pensado para asistentes: https://fiao.app/llms.txt
+# Resumen pensado para asistentes: https://elfiao.com/llms.txt
 
 User-agent: *
 Allow: /
@@ -35,4 +35,4 @@ User-agent: MistralAI-User
 Allow: /
 Disallow: /kit
 
-Sitemap: https://fiao.app/sitemap-index.xml
+Sitemap: https://elfiao.com/sitemap-index.xml

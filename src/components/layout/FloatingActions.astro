@@ -14,10 +14,14 @@ import Icon from "@/components/ui/Icon.astro";
 import IconBubble from "@/components/ui/IconBubble.astro";
 import StoreBadges from "@/components/ui/StoreBadges.astro";
 import { downloadModalContent as modal, whatsappContact } from "@/data/landing";
-import { placeholderQrPath, finderOrigins } from "@/lib/qr-placeholder";
+import { buildQr } from "@/lib/qr-code";
+import { absoluteUrl } from "@/lib/seo";
 
 const whatsappUrl = `https://wa.me/${whatsappContact.number}?text=${encodeURIComponent(whatsappContact.message)}`;
-const qr = placeholderQrPath();
+// El QR apunta a /descargar (no a la APK directa): esa página detecta el sistema y en Android
+// baja la APK, mientras que en iPhone muestra "aún no disponible". Así un mismo QR sirve para
+// ambos. Si se define una imagen propia (modal.qrImage), esa tiene prioridad.
+const qr = buildQr(absoluteUrl("/descargar"));
 ---
 
 <div class="floating-actions fixed right-4 bottom-4 z-40 flex flex-col items-end gap-3 sm:right-6 sm:bottom-6">
@@ -47,11 +51,11 @@ const qr = placeholderQrPath();
 </div>
 
 <dialog id="download-modal" class="download-modal" aria-labelledby="download-modal-title" aria-describedby="download-modal-desc">
-  <div class="relative flex flex-col items-center gap-5 px-6 pt-4 pb-7 text-center sm:px-8 sm:pt-8">
-    <!-- Manija del bottom-sheet (solo móvil), como Sheet en la app. -->
+  <!-- Barra superior fija: manija (móvil) y botón cerrar. Se quedan a la vista aunque el
+       contenido haga scroll, y ganan una sombra sutil al desplazarse (data-scrolled). -->
+  <div class="download-modal__bar">
     <span class="h-1 w-10 rounded-full bg-ink-200 sm:hidden" aria-hidden="true"></span>
-
-    <form method="dialog" class="absolute top-3 right-3 sm:top-4 sm:right-4">
+    <form method="dialog" class="download-modal__close">
       <button
         type="submit"
         class="press press-icon inline-flex h-10 w-10 items-center justify-center rounded-full bg-ink-100 text-text-muted hover:bg-ink-200"
@@ -60,8 +64,10 @@ const qr = placeholderQrPath();
         <Icon name="close" size={18} />
       </button>
     </form>
+  </div>
 
-    <IconBubble icon="phone-portrait-outline" size={56} class="mt-2 sm:mt-0" />
+  <div class="download-modal__body flex flex-col items-center gap-5 px-6 pt-1 pb-7 text-center sm:px-8">
+    <IconBubble icon="phone-portrait-outline" size={56} />
 
     <div class="flex flex-col gap-2">
       <h2 id="download-modal-title" class="text-title-2 font-extrabold">{modal.title}</h2>
@@ -71,32 +77,32 @@ const qr = placeholderQrPath();
       </p>
     </div>
 
-    <!-- QR: en móvil no tiene sentido (ya estás en el celular), ahí van directo las tiendas. -->
+    <!-- QR: en móvil no tiene sentido (ya estás en el celular), ahí van directo los badges. -->
     <figure class="hidden flex-col items-center gap-3 sm:flex">
       <div class="relative rounded-2xl border border-border bg-white p-4 shadow-sm">
         {
           modal.qrImage ? (
-            <img src={modal.qrImage} alt="Código QR para descargar fiao" width="200" height="200" class="h-[200px] w-[200px]" />
-          ) : (
+            <img src={modal.qrImage} alt={modal.qrAlt} width="200" height="200" class="h-[200px] w-[200px]" />
+          ) : qr ? (
             <svg
               viewBox={`-1 -1 ${qr.size + 2} ${qr.size + 2}`}
               width="200"
               height="200"
               role="img"
-              aria-label="Código QR de ejemplo (todavía no lleva a ninguna parte)"
+              aria-label={modal.qrAlt}
               shape-rendering="crispEdges"
             >
               <path d={qr.path} fill="#0B0F14" />
-              {finderOrigins.map(([x, y]) => (
+              {qr.finders.map(([x, y]) => (
                 <g>
                   <rect x={x + 0.5} y={y + 0.5} width="6" height="6" rx="1.6" fill="none" stroke="#0B0F14" stroke-width="1" />
                   <rect x={x + 2} y={y + 2} width="3" height="3" rx="0.8" fill="#0B0F14" />
                 </g>
               ))}
             </svg>
-          )
+          ) : null
         }
-        <!-- Asterisco de fiao en el centro del código. -->
+        <!-- Asterisco de fiao en el centro del código (el nivel H tolera este logo). -->
         <span class="absolute inset-0 m-auto inline-flex h-11 w-11 items-center justify-center rounded-[12px] bg-white" aria-hidden="true">
           <span class="inline-flex h-9 w-9 items-center justify-center rounded-[10px] bg-ink-900 text-brand-500">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
@@ -105,14 +111,10 @@ const qr = placeholderQrPath();
           </span>
         </span>
       </div>
-      {
-        !modal.qrImage && (
-          <figcaption class="inline-flex items-center gap-1.5 rounded-pill bg-warning-50 px-3 py-1 text-caption font-semibold text-warning-800">
-            <Icon name="alert-circle-outline" size={14} />
-            {modal.qrExampleNote}
-          </figcaption>
-        )
-      }
+      <figcaption class="inline-flex items-center gap-1.5 text-caption font-medium text-text-muted">
+        <Icon name="phone-portrait-outline" size={15} />
+        {modal.qrCaption}
+      </figcaption>
     </figure>
 
     <div class="flex w-full items-center gap-3 text-caption text-text-muted">
@@ -174,6 +176,56 @@ const qr = placeholderQrPath();
     box-shadow: var(--shadow-xl);
     overflow-y: auto;
     overscroll-behavior: contain;
+    /* Barra de scroll fina y discreta cuando el contenido no cabe (pantallas bajas). */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-200) transparent;
+  }
+  .download-modal::-webkit-scrollbar {
+    width: 10px;
+  }
+  .download-modal::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .download-modal::-webkit-scrollbar-thumb {
+    background: var(--color-ink-200);
+    border: 3px solid var(--color-surface);
+    border-radius: var(--radius-pill);
+  }
+  .download-modal::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-300);
+  }
+
+  /* Barra superior fija (manija + cerrar): siempre visible durante el scroll. */
+  .download-modal__bar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.75rem 0.75rem 0.25rem;
+    background: var(--color-surface);
+    transition: box-shadow var(--duration-fast) var(--ease-snappy);
+  }
+  .download-modal__close {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.625rem;
+  }
+  /* Hairline sutil bajo la barra solo cuando el contenido se ha desplazado. */
+  .download-modal[data-scrolled="true"] .download-modal__bar {
+    box-shadow: 0 1px 0 0 var(--color-border);
+  }
+  @media (width >= 40rem) {
+    .download-modal__bar {
+      min-height: 3.25rem;
+      padding-top: 1rem;
+    }
+    .download-modal__close {
+      top: 0.875rem;
+      right: 0.875rem;
+    }
   }
   .download-modal::backdrop {
     background: rgb(11 15 20 / 0.6); /* overlay de la app */
@@ -234,6 +286,9 @@ const qr = placeholderQrPath();
       event.preventDefault();
       opener = trigger;
       modal.showModal();
+      // Siempre abre desde arriba, sin arrastrar el scroll de una apertura anterior.
+      modal.scrollTop = 0;
+      modal.dataset.scrolled = "false";
     });
 
     // Tocar el fondo (fuera de la tarjeta) cierra el modal.
@@ -245,6 +300,15 @@ const qr = placeholderQrPath();
       if ((event.target as HTMLElement).closest("a")) modal.close();
     });
     modal.addEventListener("close", () => opener?.focus({ preventScroll: true }));
+
+    // La barra superior gana una sombra sutil en cuanto el contenido se desplaza.
+    modal.addEventListener(
+      "scroll",
+      () => {
+        modal.dataset.scrolled = String(modal.scrollTop > 4);
+      },
+      { passive: true },
+    );
   }
 
   if (fab) {

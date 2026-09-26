@@ -4,17 +4,16 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-// TODO(datos): confirmar el dominio real de producción (también en src/lib/seo.ts).
 export default defineConfig({
-  site: 'https://fiao.app',
+  site: 'https://elfiao.com',
   // Toda la CSS va en línea: es una sola página y así no hay petición que bloquee el
   // primer render (≈8 KB comprimida).
   build: { inlineStylesheets: 'always' },
   integrations: [
     react(),
-    // /kit es la vitrina interna del design system y /404 no es una página real.
+    // /kit (vitrina del design system), /404 y /descargar (redirección del QR) no van al sitemap.
     sitemap({
-      filter: (page) => !page.includes('/kit') && !page.includes('/404'),
+      filter: (page) => !page.includes('/kit') && !page.includes('/404') && !page.includes('/descargar'),
       changefreq: 'monthly',
       lastmod: new Date(),
       i18n: { defaultLocale: 'es', locales: { es: 'es-CO' } },
