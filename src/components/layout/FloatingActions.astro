@@ -3,7 +3,8 @@
  * Acciones flotantes (esquina inferior derecha):
  *  1. "Descarga la app": píldora verde como el Fab de fiao-mobil (src/ui/Fab.tsx). Aparece
  *     al pasar el hero y abre el modal con el QR y los badges de las tiendas.
- *  2. WhatsApp: botón circular que abre un chat con fiao con un mensaje ya escrito.
+ *  2. WhatsApp: botón circular. Aún no hay línea abierta, así que no enlaza a un chat;
+ *     al tocarlo muestra un globo con el aviso "pronto estaremos por WhatsApp".
  *
  * El modal es un <dialog> nativo: atrapa el foco, se cierra con Esc, con la X o tocando
  * el fondo, y devuelve el foco al botón que lo abrió. En escritorio es la tarjeta del
@@ -17,7 +18,6 @@ import { downloadModalContent as modal, whatsappContact } from "@/data/landing";
 import { buildQr } from "@/lib/qr-code";
 import { absoluteUrl } from "@/lib/seo";
 
-const whatsappUrl = `https://wa.me/${whatsappContact.number}?text=${encodeURIComponent(whatsappContact.message)}`;
 // El QR apunta a /descargar (no a la APK directa): esa página detecta el sistema y en Android
 // baja la APK, mientras que en iPhone muestra "aún no disponible". Así un mismo QR sirve para
 // ambos. Si se define una imagen propia (modal.qrImage), esa tiene prioridad.
@@ -38,16 +38,22 @@ const qr = buildQr(absoluteUrl("/descargar"));
     {modal.fabLabel}
   </button>
 
-  <a
-    href={whatsappUrl}
-    target="_blank"
-    rel="noopener"
-    class="whatsapp-fab press inline-flex h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-full text-white shadow-lg"
-    aria-label={whatsappContact.label}
-    title={whatsappContact.label}
-  >
-    <Icon name="logo-whatsapp" size={28} />
-  </a>
+  <div class="wa-contact relative">
+    <div id="wa-coming-soon" class="wa-bubble" role="status" hidden>
+      {whatsappContact.comingSoon}
+    </div>
+    <button
+      type="button"
+      id="whatsapp-fab"
+      class="whatsapp-fab press inline-flex h-13 w-13 sm:h-14 sm:w-14 items-center justify-center rounded-full text-white shadow-lg"
+      aria-label={whatsappContact.label}
+      title={whatsappContact.label}
+      aria-expanded="false"
+      aria-controls="wa-coming-soon"
+    >
+      <Icon name="logo-whatsapp" size={28} />
+    </button>
+  </div>
 </div>
 
 <dialog id="download-modal" class="download-modal" aria-labelledby="download-modal-title" aria-describedby="download-modal-desc">
@@ -144,6 +150,49 @@ const qr = buildQr(absoluteUrl("/descargar"));
   }
   .whatsapp-fab:hover {
     background: #179446;
+  }
+
+  /* Globo "pronto estaremos": sale sobre el botón, anclado a su borde derecho.
+     max-width limitado al viewport para que nunca provoque scroll horizontal. */
+  .wa-bubble {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.75rem);
+    width: max-content;
+    max-width: min(15rem, calc(100vw - 2rem));
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text-strong);
+    box-shadow: var(--shadow-lg);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 600;
+    text-align: left;
+    text-wrap: balance;
+  }
+  /* Colita apuntando al botón (esquina inferior derecha del globo). */
+  .wa-bubble::after {
+    content: "";
+    position: absolute;
+    right: 1.125rem;
+    bottom: -0.3125rem;
+    width: 0.625rem;
+    height: 0.625rem;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    transform: rotate(45deg);
+  }
+  .wa-bubble:not([hidden]) {
+    animation: wa-bubble-in var(--duration-normal) var(--ease-snappy);
+  }
+  @keyframes wa-bubble-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.96);
+    }
   }
   .download-fab {
     opacity: 0;
@@ -274,6 +323,27 @@ const qr = buildQr(absoluteUrl("/descargar"));
 </style>
 
 <script>
+  // WhatsApp: aún sin línea abierta. El botón muestra/oculta un globo "pronto estaremos".
+  const waFab = document.getElementById("whatsapp-fab");
+  const waBubble = document.getElementById("wa-coming-soon");
+  if (waFab && waBubble) {
+    const setOpen = (open: boolean) => {
+      waBubble.hidden = !open;
+      waFab.setAttribute("aria-expanded", String(open));
+    };
+    waFab.addEventListener("click", (event) => {
+      event.stopPropagation();
+      setOpen(waBubble.hidden);
+    });
+    // Tocar fuera o presionar Esc lo cierra.
+    document.addEventListener("click", (event) => {
+      if (!waBubble.hidden && !(event.target as HTMLElement).closest(".wa-contact")) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !waBubble.hidden) setOpen(false);
+    });
+  }
+
   const modal = document.getElementById("download-modal") as HTMLDialogElement | null;
   const fab = document.getElementById("download-fab");
 

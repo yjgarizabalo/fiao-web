@@ -335,14 +335,14 @@ export const footerContent = {
 
 /**
  * Botón flotante de WhatsApp.
- * TODO(datos): poner el número real de fiao (con indicativo 57, solo dígitos). El actual
- * es un marcador que no corresponde a ningún celular (los móviles de Colombia empiezan
- * por 3), así que WhatsApp lo muestra como número no válido hasta que se cambie.
+ * Aún no hay línea de atención abierta, así que el botón no abre un chat: al tocarlo
+ * muestra un aviso de "pronto estaremos disponibles".
+ * TODO(datos): cuando exista el número real de fiao (indicativo 57, solo dígitos),
+ * volver a enlazar a wa.me con un mensaje predefinido.
  */
 export const whatsappContact = {
-  number: "570000000000",
-  message: "Hola 👋 Quiero saber más sobre fiao para mi negocio.",
-  label: "Escríbenos por WhatsApp",
+  label: "WhatsApp de fiao",
+  comingSoon: "¡Pronto estaremos por WhatsApp! 👋",
 };
 
 /**
