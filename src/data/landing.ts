@@ -33,7 +33,7 @@ export const navItems: NavItem[] = [
  */
 export const storeLinks = {
   ios: null as string | null,
-  android: "https://expo.dev/artifacts/eas/8h-JSIbcBS87e343cMdNkcgrrU1gU0i2yI0P0SvE-uA.apk" as string | null,
+  android: "https://expo.dev/artifacts/eas/mhWdibWIv7ABH0bTKGdr26k0RZUBTzvzt2VYtBXAfU4.apk" as string | null,
 };
 
 /** Nombre de cada tienda, como lo escriben Apple y Google. */
