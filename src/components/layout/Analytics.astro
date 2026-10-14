@@ -1,0 +1,31 @@
+---
+/**
+ * Google Analytics 4 (gtag.js). Va en el <head> de cada página.
+ *
+ * Solo se imprime en builds de producción (`astro build` / `astro preview`): en `astro dev`
+ * no se renderiza, así las visitas locales no ensucian las métricas.
+ *
+ * Los <script> llevan `is:inline` para que Astro no los procese ni los empaquete: el de
+ * googletagmanager debe quedar tal cual (async, desde su CDN) y el de configuración debe
+ * ejecutarse de inmediato para no perder el primer page_view.
+ *
+ * El cuerpo se pasa con `set:html` y no con `define:vars` porque `define:vars` envuelve el
+ * script en un IIFE y `gtag` dejaría de ser global: cualquier `gtag("event", ...)` que se
+ * dispare después desde otro script fallaría.
+ */
+const measurementId = "G-P8K17Q1BY9";
+
+const gtagSetup = `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${measurementId}');`;
+---
+
+{
+  import.meta.env.PROD && (
+    <Fragment>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`} />
+      <script is:inline set:html={gtagSetup} />
+    </Fragment>
+  )
+}

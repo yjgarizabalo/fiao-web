@@ -12,6 +12,7 @@
 import "@/styles/global.css";
 import IconBubble from "@/components/ui/IconBubble.astro";
 import Icon from "@/components/ui/Icon.astro";
+import Analytics from "@/components/layout/Analytics.astro";
 import { storeLinks, iosSoonModalContent as ios } from "@/data/landing";
 
 const androidUrl = storeLinks.android;
@@ -27,6 +28,7 @@ const androidUrl = storeLinks.android;
     <title>Descargar fiao</title>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="preload" href="/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+    <Analytics />
   </head>
   <body class="flex min-h-dvh items-center justify-center bg-bg p-6 text-text">
     <main class="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl bg-surface p-8 text-center shadow-xl ring-1 ring-border">
